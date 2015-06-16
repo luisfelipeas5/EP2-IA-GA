@@ -5,8 +5,8 @@ CHECKLIST:
 		- Crossover OX
 		- Mutação Inversa
 		PARÂMETROS:
-			- Taxa de crossover
-			- Taxa de mutação
+			- Taxa de crossover OKAY
+			- Taxa de mutação OKAY
 			- Operador de seleção
 		MOSTRAR NA TELA:
 			- Progressão da evolução
