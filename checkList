@@ -1,0 +1,13 @@
+CHECKLIST:
+	REQUISITOS MÍNIMOS:
+		- Codificação com números inteiros
+		- Função de fitness
+		- Crossover OX
+		- Mutação Inversa
+		PARÂMETROS:
+			- Taxa de crossover
+			- Taxa de mutação
+			- Operador de seleção
+		MOSTRAR NA TELA:
+			- Progressão da evolução
+			- Gravar em arquivo texto os melhores indivíduos
