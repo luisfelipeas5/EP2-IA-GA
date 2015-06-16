@@ -20,5 +20,15 @@ public class AlgoritmoGenetico {
 		Matrix populacao=Leitor_Arquivo_Entrada.lee_arquivo(nome_arquivo);
 		System.out.println("Populacao inicial:");
 		populacao.print(populacao.getColumnDimension(), 3);
+	
+		for(int geracao_atual=0; 
+				geracao_atual<numero_geracao_limite && variabilidade<variabilidade_minima;
+				geracao_atual++) {
+			Matrix fitness_populacao=finess(populacao);
+			Matrix nova_populacao=selecao(populacao,fitness_populacao);
+			aplica_crossover(nova_populacao);
+			aplica_mutacao(nova_populacao);
+			variabilidade=avalia(nova_populacao);
+		}
 	}
 }
