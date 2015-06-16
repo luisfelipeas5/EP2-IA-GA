@@ -4,4 +4,6 @@ Disciplina ministrada por: Clodoaldo Aparecido de Moraes Lima
 Assunto: Algoritmo Genético
 
 Alunos:
-  Luis Felipe de Almeida da Silva
+  Luis Felipe de Almeida da Silva 8516775
+  
+Parâmetros adicionais:
