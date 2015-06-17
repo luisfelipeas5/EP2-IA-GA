@@ -4,7 +4,10 @@ Disciplina ministrada por: Clodoaldo Aparecido de Moraes Lima
 Assunto: Algoritmo Genético
 
 Alunos:
-  Luis Felipe de Almeida da Silva 8516775
+  André Mello 7137440
+  Antonio Mateus 8516031
+  Luís Felipe de Almeida da Silva 8516775
+  Marcelo Kazuya Kajiwara 8516903
 
 Pacotes necessários:
   Jama (http://math.nist.gov/javanumerics/jama/#Package)
