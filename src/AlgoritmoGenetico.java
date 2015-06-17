@@ -1,5 +1,6 @@
 import java.util.Random;
 
+import edu.umbc.cs.maple.utils.JamaUtils;
 import Jama.Matrix;
 
 public class AlgoritmoGenetico {
@@ -14,13 +15,18 @@ public class AlgoritmoGenetico {
 		double taxa_mutacao=Double.parseDouble(args[1]);
 		int operador_selecao=Integer.parseInt(args[2]);
 		int tamanho_populacao_inicial=10;
+		double diversidade_minima=0.001;
+		int numero_geracao_maximo=1000;
 		String nome_arquivo=args[3];
 		
-		System.out.println("Taxa de crossover="+taxa_crossover);
-		System.out.println("Taxa de mutacao="+taxa_mutacao);
-		System.out.println("Operador de selecao="+operador_selecao);
-		System.out.println("Tamanho da Populacao inicial="+tamanho_populacao_inicial);
-		
+		System.out.println("Parametros iniciais:");
+		System.out.println("\tTaxa de crossover="+taxa_crossover);
+		System.out.println("\tTaxa de mutacao="+taxa_mutacao);
+		System.out.println("\tOperador de selecao="+operador_selecao);
+		System.out.println("\tTamanho da Populacao inicial="+tamanho_populacao_inicial);
+		System.out.println("\tDiversidade minima="+diversidade_minima);
+		System.out.println("\tNumero maximo de geracoes="+numero_geracao_maximo);
+		System.out.println();
 		//matriz de cada uma das cidades que irao compor o cromossomo
 		Matrix cidades=Leitor_Arquivo_Entrada.lee_arquivo(nome_arquivo);
 		
@@ -34,19 +40,36 @@ public class AlgoritmoGenetico {
 		//System.out.println("Fitness inicial:");
 		//fitness_inicial.print(fitness_inicial.getRowDimension(), 4);
 		
-		//TESTADO ATE AQUI----------------------
-		
-		int diversidade=avalia_diversidade(populacao);
+		//calcula-se a diversidade da populacao inicial
+		double diversidade=avalia_diversidade(fitness_inicial);
+		System.out.println("Diversidade inicial="+diversidade);
 		for(int geracao_atual=0; 
-				geracao_atual<numero_geracao_limite && diversidade<diversidade_minima;
+				geracao_atual<numero_geracao_maximo && diversidade<diversidade_minima;
 				geracao_atual++) {
-			Matrix fitness_populacao=fitness(populacao);
+			Matrix fitness_populacao=fitness(populacao, cidades);
 			Matrix nova_populacao=selecao(populacao,fitness_populacao);
 			aplica_crossover(nova_populacao);
 			aplica_mutacao(nova_populacao);
 			diversidade=avalia_diversidade(nova_populacao);
 		}
 		
+	}
+	
+	/*
+	 * Diversidade calculada a partir da distancia media entre
+	 * os valores passados em uma matriz de fitness
+	 */
+	private static double avalia_diversidade(Matrix fitness) {
+		double diversidade=0;
+		
+		//Melhor fitness
+		double melhor_fitness=JamaUtils.getMax(fitness);
+		//Comparar os fitness e calcular a distancia com o maior fitness
+		for (int indice_fitness = 0; indice_fitness < fitness.getRowDimension(); indice_fitness++) {
+			diversidade+= (melhor_fitness- fitness.get(indice_fitness, 0));
+		}
+		diversidade=diversidade/fitness.getRowDimension();
+		return diversidade;
 	}
 
 	private static Matrix fitness(Matrix populacao, Matrix cidades) {
