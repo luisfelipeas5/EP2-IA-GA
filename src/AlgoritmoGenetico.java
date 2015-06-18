@@ -14,10 +14,12 @@ public class AlgoritmoGenetico {
 		double taxa_crossover=Double.parseDouble(args[0]);
 		double taxa_mutacao=Double.parseDouble(args[1]);
 		int operador_selecao=Integer.parseInt(args[2]);
+		String nome_arquivo=args[3];
+		
 		int tamanho_populacao_inicial=10;
 		double diversidade_minima=0.001;
-		int numero_geracao_maximo=1000;
-		String nome_arquivo=args[3];
+		int numero_geracao_maximo=1;
+		int tipo_crossover=0;
 		
 		System.out.println("Parametros iniciais:");
 		System.out.println("\tTaxa de crossover="+taxa_crossover);
@@ -27,29 +29,26 @@ public class AlgoritmoGenetico {
 		System.out.println("\tDiversidade minima="+diversidade_minima);
 		System.out.println("\tNumero maximo de geracoes="+numero_geracao_maximo);
 		System.out.println();
+		
 		//matriz de cada uma das cidades que irao compor o cromossomo
 		Matrix cidades=Leitor_Arquivo_Entrada.lee_arquivo(nome_arquivo);
 		
 		//Cada linha da matriz representa um cromossomo; cada elemento uma cidade
 		Matrix populacao=gera_populacao_inicial(cidades.getRowDimension(), tamanho_populacao_inicial);
-		//System.out.println("Populacao inicial:");
-		//populacao.print(10, 0);
 		
 		//Funcao de fitness calculada para saber a diversidade inicial
 		Matrix fitness_inicial=fitness(populacao, cidades);
-		//System.out.println("Fitness inicial:");
-		//fitness_inicial.print(fitness_inicial.getRowDimension(), 4);
 		
 		//calcula-se a diversidade da populacao inicial
 		double diversidade=avalia_diversidade(fitness_inicial);
-		System.out.println("Diversidade inicial="+diversidade);
-		for(int geracao_atual=0; 
-				geracao_atual<numero_geracao_maximo && diversidade<diversidade_minima;
-				geracao_atual++) {
+		
+		for(int geracao_atual=0; geracao_atual<numero_geracao_maximo && diversidade>diversidade_minima;	geracao_atual++) {
 			Matrix fitness_populacao=fitness(populacao, cidades);
-			Matrix nova_populacao=selecao(populacao,fitness_populacao);
-			aplica_crossover(nova_populacao);
-			aplica_mutacao(nova_populacao);
+			
+			Matrix nova_populacao=Selecao.seleciona_candidatos(populacao,fitness_populacao, operador_selecao);
+			
+			nova_populacao=Crossover.aplica_crossover(nova_populacao, taxa_crossover,tipo_crossover);
+			//aplica_mutacao(nova_populacao);
 			diversidade=avalia_diversidade(nova_populacao);
 		}
 		
@@ -103,7 +102,11 @@ public class AlgoritmoGenetico {
 			
 			//Adicionar fitness desse cromossomo na matriz de fitness
 			//Problema de maximizacao, portanto: quanto maior distancia percorrida, menor o fitness
-			double fitness_cromossomo= 100000/distancia_total;
+			double fitness_cromossomo= 1/distancia_total;
+			if (Double.isInfinite(fitness_cromossomo)) {
+				fitness_cromossomo=Double.MAX_VALUE;
+			}
+			
 			fitness.set(indice_cromossomo, 0, fitness_cromossomo);
 		}
 		
