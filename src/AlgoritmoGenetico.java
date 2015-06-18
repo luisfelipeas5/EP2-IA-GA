@@ -76,26 +76,26 @@ public class AlgoritmoGenetico {
 		//calcular o fitness de cada um dos cromossomos da populacao
 		for (int indice_cromossomo = 0; indice_cromossomo < populacao.getRowDimension(); indice_cromossomo++) {
 			//Cromossomo do calculo do fitness
-			Matrix cromossomo=populacao.getMatrix(indice_cromossomo, indice_cromossomo, 0, populacao.getColumnDimension()-1);
+			Matrix cromossomo=JamaUtils.getrow(populacao, indice_cromossomo);
 			
 			double distancia_total=0;
 			//Somar as distancias entre as cidades
 			for (int indice_cidade_cromossomo = 0; indice_cidade_cromossomo < cromossomo.getColumnDimension()-1; indice_cidade_cromossomo++) {
-				int indice_cidade=(int)cromossomo.get(0, indice_cidade_cromossomo);
-				int indice_cidade_proxima=(int)cromossomo.get(0, indice_cidade_cromossomo+1);
+				int indice_cidade=((int)cromossomo.get(0, indice_cidade_cromossomo))-1;
+				int indice_cidade_proxima=((int)cromossomo.get(0, (indice_cidade_cromossomo+1)))-1;
 				
-				Matrix cidade_atual=cidades.getMatrix(indice_cidade, indice_cidade, 0, cidades.getColumnDimension()-1);
-				Matrix cidade_proxima=cidades.getMatrix(indice_cidade_proxima, indice_cidade_proxima, 0, cidades.getColumnDimension()-1);
+				Matrix cidade_atual=JamaUtils.getrow(cidades,indice_cidade);
+				Matrix cidade_proxima=JamaUtils.getrow(cidades, indice_cidade_proxima);
 				
 				double distancia_da_proxima_cidade= distancia_euclidiana(cidade_atual, cidade_proxima);
 				distancia_total+=distancia_da_proxima_cidade;
 			}
 			//Somar distancia da ultima cidade para a primeira
-			int indice_cidade_ultima=(int)cromossomo.get(0, cromossomo.getColumnDimension()-1);
-			int indice_cidade_primeira=(int)cromossomo.get(0, 0);
+			int indice_cidade_ultima=((int)cromossomo.get(0, cromossomo.getColumnDimension()-1))-1;
+			int indice_cidade_primeira=((int)cromossomo.get(0, 0))-1;
 			
-			Matrix cidade_ultima=cidades.getMatrix(indice_cidade_ultima, indice_cidade_ultima, 0, cidades.getColumnDimension()-1);
-			Matrix cidade_primeira=cidades.getMatrix(indice_cidade_primeira, indice_cidade_primeira, 0, cidades.getColumnDimension()-1);
+			Matrix cidade_ultima=JamaUtils.getrow(cidades, indice_cidade_ultima);
+			Matrix cidade_primeira=JamaUtils.getrow(cidades, indice_cidade_primeira);
 			
 			double distancia_da_primeira_para_ultima= distancia_euclidiana(cidade_ultima, cidade_primeira);
 			distancia_total+=distancia_da_primeira_para_ultima;
@@ -144,15 +144,17 @@ public class AlgoritmoGenetico {
 			int quantidade_cidades_incluidas=0;
 			
 			for(int quant_cidades_incluidas=0; quant_cidades_incluidas<quant_cidades; quant_cidades_incluidas++) {
-				int cidade=Math.abs(random.nextInt())%quant_cidades;//escolhe randomicamente uma cidade para incluir
+				int cidade=(Math.abs(random.nextInt())%quant_cidades);//escolhe randomicamente uma cidade para incluir
 				/*
 				 * se essa cidade ja for incluida,
 				 * busca sequencial para achar a proxima cidade que nao foi escolhida ainda
 				 */
 				while(cidade_incluida_cromossomo[cidade]==1 ) {
-					cidade++;
+					cidade=((cidade+1)%quant_cidades);
 				}
-				populacao.set(indice_cromossomo, quantidade_cidades_incluidas, cidade);
+				populacao.set(indice_cromossomo, quantidade_cidades_incluidas, cidade+1);
+				cidade_incluida_cromossomo[cidade]=1;
+				
 				quantidade_cidades_incluidas++;
 			}
 		}
