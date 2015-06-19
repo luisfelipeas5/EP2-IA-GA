@@ -1,13 +1,19 @@
 CHECKLIST:
+	FORA DOS REQUISITOS:
+		- Otimizacao
 	REQUISITOS MÍNIMOS:
-		- Codificação com números inteiros
-		- Função de fitness
-		- Crossover OX
+		OK - Codificação com números inteiros
+		OK - Função de fitness
+		OK - Crossover OX 
 		- Mutação Inversa
 		PARÂMETROS:
-			- Taxa de crossover OKAY
-			- Taxa de mutação OKAY
-			- Operador de seleção
+			OK - Taxa de crossover
+			OK - Taxa de mutação
+			OK - Operador de seleção
 		MOSTRAR NA TELA:
-			- Progressão da evolução
+			OK - Progressão da evolução
 			- Gravar em arquivo texto os melhores indivíduos
+	REQUISITOS DESEJAVEIS:
+		- Implementar outros tipos de Selecao
+		- Implementar outros tipos de Crossover
+		- Implementar outros tipos de Mutacao
