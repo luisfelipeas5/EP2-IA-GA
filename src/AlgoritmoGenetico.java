@@ -16,10 +16,11 @@ public class AlgoritmoGenetico {
 		int operador_selecao=Integer.parseInt(args[2]);
 		String nome_arquivo=args[3];
 		
-		int tamanho_populacao_inicial=10;
-		double diversidade_minima=0.001;
-		int numero_geracao_maximo=1;
+		int tamanho_populacao_inicial=200;
+		double diversidade_minima=0;
+		int numero_geracao_maximo=10000;
 		int tipo_crossover=0;
+		boolean incluir_pais_nova_populacao=true;
 		
 		System.out.println("Parametros iniciais:");
 		System.out.println("\tTaxa de crossover="+taxa_crossover);
@@ -40,16 +41,25 @@ public class AlgoritmoGenetico {
 		Matrix fitness_inicial=fitness(populacao, cidades);
 		
 		//calcula-se a diversidade da populacao inicial
-		double diversidade=avalia_diversidade(fitness_inicial);
+		double diversidade=avalia(fitness_inicial)[2];
 		
 		for(int geracao_atual=0; geracao_atual<numero_geracao_maximo && diversidade>diversidade_minima;	geracao_atual++) {
 			Matrix fitness_populacao=fitness(populacao, cidades);
 			
 			Matrix nova_populacao=Selecao.seleciona_candidatos(populacao,fitness_populacao, operador_selecao);
 			
-			nova_populacao=Crossover.aplica_crossover(nova_populacao, taxa_crossover,tipo_crossover);
-			//aplica_mutacao(nova_populacao);
-			diversidade=avalia_diversidade(nova_populacao);
+			nova_populacao=Crossover.aplica_crossover(nova_populacao, taxa_crossover,tipo_crossover, incluir_pais_nova_populacao);
+			
+			//nova_populacao=Mutacao.aplica_mutacao(nova_populacao, taxa_mutacao, tipo_mutacao);
+			populacao=nova_populacao;
+			
+			double[] medidas_avaliacao = avalia(fitness_populacao);
+			diversidade=medidas_avaliacao[2];
+			
+			System.out.println("Geracao "+geracao_atual);
+			System.out.print("\tmelhor fitness="+medidas_avaliacao[0]+
+							" media="+medidas_avaliacao[1]+
+							" diversidade="+medidas_avaliacao[2]+"\n");
 		}
 		
 	}
@@ -57,18 +67,30 @@ public class AlgoritmoGenetico {
 	/*
 	 * Diversidade calculada a partir da distancia media entre
 	 * os valores passados em uma matriz de fitness
+	 * Retorna um aray de double, onde a posicao:
+	 * 0- melhor fitness
+	 * 1- media dos fitness
+	 * 2- diversidade
 	 */
-	private static double avalia_diversidade(Matrix fitness) {
+	private static double[] avalia(Matrix fitness) {
+		double[] avaliacao=new double[3];
+		
 		double diversidade=0;
 		
 		//Melhor fitness
 		double melhor_fitness=JamaUtils.getMax(fitness);
-		//Comparar os fitness e calcular a distancia com o maior fitness
+		double soma_fitness=0;
+		//Comparar a media dos fitness e calcular a distancia com o maior fitness
 		for (int indice_fitness = 0; indice_fitness < fitness.getRowDimension(); indice_fitness++) {
-			diversidade+= (melhor_fitness- fitness.get(indice_fitness, 0));
+			soma_fitness+=fitness.get(indice_fitness, 0);
 		}
-		diversidade=diversidade/fitness.getRowDimension();
-		return diversidade;
+		double media_fitness=soma_fitness/fitness.getRowDimension();
+		diversidade = (melhor_fitness-media_fitness);
+		
+		avaliacao[0]=melhor_fitness;
+		avaliacao[1]=media_fitness;
+		avaliacao[2]=diversidade;
+		return avaliacao;
 	}
 
 	private static Matrix fitness(Matrix populacao, Matrix cidades) {
@@ -103,9 +125,9 @@ public class AlgoritmoGenetico {
 			//Adicionar fitness desse cromossomo na matriz de fitness
 			//Problema de maximizacao, portanto: quanto maior distancia percorrida, menor o fitness
 			double fitness_cromossomo= 1/distancia_total;
-			if (Double.isInfinite(fitness_cromossomo)) {
-				fitness_cromossomo=Double.MAX_VALUE;
-			}
+			//if (Double.isInfinite(fitness_cromossomo)) {
+			//	fitness_cromossomo=Double.MAX_VALUE;
+			//}
 			
 			fitness.set(indice_cromossomo, 0, fitness_cromossomo);
 		}
