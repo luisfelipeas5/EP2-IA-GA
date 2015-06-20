@@ -34,26 +34,41 @@ public class AlgoritmoGenetico {
 		//matriz de cada uma das cidades que irao compor o cromossomo
 		Matrix cidades=Leitor_Arquivo_Entrada.lee_arquivo(nome_arquivo);
 		
+		//matriz que armazena as distancias entre cada uma das cidades
+		Matrix distancias=calcula_distancias(cidades);
+		
 		//Cada linha da matriz representa um cromossomo; cada elemento uma cidade
 		Matrix populacao=gera_populacao_inicial(cidades.getRowDimension(), tamanho_populacao_inicial);
 		
 		//Funcao de fitness calculada para saber a diversidade inicial
-		Matrix fitness_inicial=fitness(populacao, cidades);
+		Matrix fitness_inicial=fitness(populacao, distancias);
 		
 		//calcula-se a diversidade da populacao inicial
 		double diversidade=avalia(fitness_inicial)[2];
 		
 		for(int geracao_atual=0; geracao_atual<numero_geracao_maximo && diversidade>diversidade_minima;	geracao_atual++) {
-			Matrix fitness_populacao=fitness(populacao, cidades);
+			System.out.print("\t\tCalculando fitness...");
+			//Calcula o fitness da nova geracao
+			Matrix fitness_populacao=fitness(populacao, distancias);
+			System.out.println("calculado!");
 			
+			System.out.print("\t\tSelecionando candidatos...");
+			//Gera uma nova populacao com os canditados a crossover
 			Matrix nova_populacao=Selecao.seleciona_candidatos(populacao,fitness_populacao, operador_selecao);
+			System.out.println("selecionados!");
 			
+			System.out.print("\t\tAplicando crossover...");
+			//Aplica o crossover na nova populacao gerada na selecao
 			nova_populacao=Crossover.aplica_crossover(nova_populacao, taxa_crossover,tipo_crossover, incluir_pais_nova_populacao);
-			
+			System.out.println("aplicado!");
+			//Aplica a mutacao na nova populacao gerada pelo crossover 
 			//nova_populacao=Mutacao.aplica_mutacao(nova_populacao, taxa_mutacao, tipo_mutacao);
+			
+			//Define a nova populacao depois da mutacao como a populacao definitiva
 			populacao=nova_populacao;
 			
-			double[] medidas_avaliacao = avalia(fitness_populacao);
+			//Armazena os valores de melhor fitness, media dos fitness e a diversidade dos individuos
+			double[] medidas_avaliacao = avalia(fitness_populacao); 
 			diversidade=medidas_avaliacao[2];
 			
 			System.out.println("Geracao "+geracao_atual);
@@ -63,7 +78,27 @@ public class AlgoritmoGenetico {
 		}
 		
 	}
-	
+	 /*
+	  * Calcula a distancia de todas as cidades para todas as cidades
+	  */
+	private static Matrix calcula_distancias(Matrix cidades) {
+		Matrix distancias=new Matrix(cidades.getRowDimension(), cidades.getRowDimension());
+		
+		for (int indice_cidade_x = 0; indice_cidade_x < cidades.getRowDimension(); indice_cidade_x++) {
+			for (int indice_cidade_y = indice_cidade_x+1; indice_cidade_y < cidades.getRowDimension(); indice_cidade_y++) {
+				//Armazena as coordenadas das cidades
+				Matrix cidade_atual=JamaUtils.getrow(cidades, indice_cidade_x);
+				Matrix cidade_proxima=JamaUtils.getrow(cidades, indice_cidade_y);
+				//calcula a distancia entre as cidades
+				double distancia=distancia_euclidiana(cidade_atual, cidade_proxima);
+				//armazena no vetor distancia
+				distancias.set(indice_cidade_x, indice_cidade_y, distancia);
+				distancias.set(indice_cidade_y, indice_cidade_x, distancia);
+			}
+		}
+		return distancias;
+	}
+
 	/*
 	 * Diversidade calculada a partir da distancia media entre
 	 * os valores passados em uma matriz de fitness
@@ -93,45 +128,31 @@ public class AlgoritmoGenetico {
 		return avaliacao;
 	}
 
-	private static Matrix fitness(Matrix populacao, Matrix cidades) {
+	private static Matrix fitness(Matrix populacao, Matrix distancias_entre_cidades) {
 		Matrix fitness = new Matrix(populacao.getRowDimension(), 1);
 		//calcular o fitness de cada um dos cromossomos da populacao
 		for (int indice_cromossomo = 0; indice_cromossomo < populacao.getRowDimension(); indice_cromossomo++) {
 			//Cromossomo do calculo do fitness
 			Matrix cromossomo=JamaUtils.getrow(populacao, indice_cromossomo);
-			
 			double distancia_total=0;
 			//Somar as distancias entre as cidades
-			for (int indice_cidade_cromossomo = 0; indice_cidade_cromossomo < cromossomo.getColumnDimension()-1; indice_cidade_cromossomo++) {
-				int indice_cidade=((int)cromossomo.get(0, indice_cidade_cromossomo))-1;
-				int indice_cidade_proxima=((int)cromossomo.get(0, (indice_cidade_cromossomo+1)))-1;
+			for (int indice_cidade_cromossomo = 0; indice_cidade_cromossomo < cromossomo.getColumnDimension(); indice_cidade_cromossomo++) {
+				int indice_cidade=(((int)cromossomo.get(0, indice_cidade_cromossomo))-1);
+				int indice_cidade_proxima=(((int)cromossomo.get(0, (indice_cidade_cromossomo+1)%cromossomo.getColumnDimension() ))-1);
 				
-				Matrix cidade_atual=JamaUtils.getrow(cidades,indice_cidade);
-				Matrix cidade_proxima=JamaUtils.getrow(cidades, indice_cidade_proxima);
-				
-				double distancia_da_proxima_cidade= distancia_euclidiana(cidade_atual, cidade_proxima);
+				double distancia_da_proxima_cidade= distancias_entre_cidades.get(indice_cidade, indice_cidade_proxima);
 				distancia_total+=distancia_da_proxima_cidade;
 			}
-			//Somar distancia da ultima cidade para a primeira
-			int indice_cidade_ultima=((int)cromossomo.get(0, cromossomo.getColumnDimension()-1))-1;
-			int indice_cidade_primeira=((int)cromossomo.get(0, 0))-1;
-			
-			Matrix cidade_ultima=JamaUtils.getrow(cidades, indice_cidade_ultima);
-			Matrix cidade_primeira=JamaUtils.getrow(cidades, indice_cidade_primeira);
-			
-			double distancia_da_primeira_para_ultima= distancia_euclidiana(cidade_ultima, cidade_primeira);
-			distancia_total+=distancia_da_primeira_para_ultima;
 			
 			//Adicionar fitness desse cromossomo na matriz de fitness
-			//Problema de maximizacao, portanto: quanto maior distancia percorrida, menor o fitness
+			/*
+			 * Problema de maximizacao de fitness e minimazacao da distancia,
+			 * portanto: quanto maior distancia percorrida, menor o fitness
+			 */
 			double fitness_cromossomo= 1/distancia_total;
-			//if (Double.isInfinite(fitness_cromossomo)) {
-			//	fitness_cromossomo=Double.MAX_VALUE;
-			//}
 			
 			fitness.set(indice_cromossomo, 0, fitness_cromossomo);
 		}
-		
 		return fitness;
 	}
 	
