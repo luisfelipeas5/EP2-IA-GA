@@ -17,6 +17,8 @@ public class AlgoritmoGenetico {
 		String nome_arquivo=args[3];
 		
 		int tamanho_populacao_inicial=200;
+		int numero_candidatos_crossover=400; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
+		int quantidade_subpopulacao=2; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
 		double diversidade_minima=0;
 		int numero_geracao_maximo=10000;
 		int tipo_crossover=0;
@@ -41,26 +43,32 @@ public class AlgoritmoGenetico {
 		Matrix populacao=gera_populacao_inicial(cidades.getRowDimension(), tamanho_populacao_inicial);
 		
 		//Funcao de fitness calculada para saber a diversidade inicial
-		Matrix fitness_inicial=fitness(populacao, distancias);
+		Matrix fitness_inicial=Fitness.fitness(populacao, distancias);
 		
 		//calcula-se a diversidade da populacao inicial
 		double diversidade=avalia(fitness_inicial)[2];
 		
 		for(int geracao_atual=0; geracao_atual<numero_geracao_maximo && diversidade>diversidade_minima;	geracao_atual++) {
+			System.out.println("Geracao "+geracao_atual);
+			
+			System.out.println("\t\tTamanho da populacao="+populacao.getRowDimension());
+			
 			System.out.print("\t\tCalculando fitness...");
 			//Calcula o fitness da nova geracao
-			Matrix fitness_populacao=fitness(populacao, distancias);
+			Matrix fitness_populacao=Fitness.fitness(populacao, distancias);
 			System.out.println("calculado!");
 			
-			System.out.print("\t\tSelecionando candidatos...");
+			System.out.println("\t\tSelecionando candidatos...");
 			//Gera uma nova populacao com os canditados a crossover
-			Matrix nova_populacao=Selecao.seleciona_candidatos(populacao,fitness_populacao, operador_selecao);
-			System.out.println("selecionados!");
+			Matrix nova_populacao=Selecao.seleciona_candidatos(populacao,fitness_populacao, operador_selecao, 
+																numero_candidatos_crossover, quantidade_subpopulacao);
+			System.out.println("\t\tselecionados!");
 			
 			System.out.print("\t\tAplicando crossover...");
 			//Aplica o crossover na nova populacao gerada na selecao
 			nova_populacao=Crossover.aplica_crossover(nova_populacao, taxa_crossover,tipo_crossover, incluir_pais_nova_populacao);
 			System.out.println("aplicado!");
+			
 			//Aplica a mutacao na nova populacao gerada pelo crossover 
 			//nova_populacao=Mutacao.aplica_mutacao(nova_populacao, taxa_mutacao, tipo_mutacao);
 			
@@ -71,7 +79,6 @@ public class AlgoritmoGenetico {
 			double[] medidas_avaliacao = avalia(fitness_populacao); 
 			diversidade=medidas_avaliacao[2];
 			
-			System.out.println("Geracao "+geracao_atual);
 			System.out.print("\tmelhor fitness="+medidas_avaliacao[0]+
 							" media="+medidas_avaliacao[1]+
 							" diversidade="+medidas_avaliacao[2]+"\n");
@@ -128,33 +135,7 @@ public class AlgoritmoGenetico {
 		return avaliacao;
 	}
 
-	private static Matrix fitness(Matrix populacao, Matrix distancias_entre_cidades) {
-		Matrix fitness = new Matrix(populacao.getRowDimension(), 1);
-		//calcular o fitness de cada um dos cromossomos da populacao
-		for (int indice_cromossomo = 0; indice_cromossomo < populacao.getRowDimension(); indice_cromossomo++) {
-			//Cromossomo do calculo do fitness
-			Matrix cromossomo=JamaUtils.getrow(populacao, indice_cromossomo);
-			double distancia_total=0;
-			//Somar as distancias entre as cidades
-			for (int indice_cidade_cromossomo = 0; indice_cidade_cromossomo < cromossomo.getColumnDimension(); indice_cidade_cromossomo++) {
-				int indice_cidade=(((int)cromossomo.get(0, indice_cidade_cromossomo))-1);
-				int indice_cidade_proxima=(((int)cromossomo.get(0, (indice_cidade_cromossomo+1)%cromossomo.getColumnDimension() ))-1);
-				
-				double distancia_da_proxima_cidade= distancias_entre_cidades.get(indice_cidade, indice_cidade_proxima);
-				distancia_total+=distancia_da_proxima_cidade;
-			}
-			
-			//Adicionar fitness desse cromossomo na matriz de fitness
-			/*
-			 * Problema de maximizacao de fitness e minimazacao da distancia,
-			 * portanto: quanto maior distancia percorrida, menor o fitness
-			 */
-			double fitness_cromossomo= 1/distancia_total;
-			
-			fitness.set(indice_cromossomo, 0, fitness_cromossomo);
-		}
-		return fitness;
-	}
+	
 	
 	/*
 	 * As matrizes que representam a cidade devem ser matrizes linhas com o mesmo numero de colunas.

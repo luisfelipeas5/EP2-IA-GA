@@ -59,12 +59,10 @@ public class Crossover {
 				cidades_incluidas_F1.put(cidade_herdada_P1, true);
 				cidades_incluidas_F2.put(cidade_herdada_P2, true);
 			}
-			
 			if(incluir_pais_nova_populacao) {
 				nova_populacao=JamaUtils.rowAppend(nova_populacao, cromossomo_P1);
 				nova_populacao=JamaUtils.rowAppend(nova_populacao, cromossomo_P2);
 			}
-			
 			//Completar cromossomo filho F1
 			int numero_cidades=Math.abs(corte_posicao_final-corte_posicao_inicial)+1;
 			int indice_incluir_cidade=(corte_posicao_final+1)%cromossomo_F1.getColumnDimension();
