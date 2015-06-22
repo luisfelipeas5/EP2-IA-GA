@@ -21,8 +21,18 @@ public class AlgoritmoGenetico {
 		int quantidade_subpopulacao=2; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
 		double diversidade_minima=0;
 		int numero_geracao_maximo=10000;
+		/*
+		 * Tipos de Crossover
+		 * 	0: crossover OX
+		 */
 		int tipo_crossover=0;
 		boolean incluir_pais_nova_populacao=true;
+		/*
+		 * Tipos de Mutação
+		 *  0: mutacao inversiva
+		 */
+		int tipo_mutacao=0;
+		int quantidade_individuos_nao_mutantes=10;
 		
 		System.out.println("Parametros iniciais:");
 		System.out.println("\tTaxa de crossover="+taxa_crossover);
@@ -69,8 +79,12 @@ public class AlgoritmoGenetico {
 			nova_populacao=Crossover.aplica_crossover(nova_populacao, taxa_crossover,tipo_crossover, incluir_pais_nova_populacao);
 			System.out.println("aplicado!");
 			
-			//Aplica a mutacao na nova populacao gerada pelo crossover 
-			//nova_populacao=Mutacao.aplica_mutacao(nova_populacao, taxa_mutacao, tipo_mutacao);
+			//Aplica a mutacao na nova populacao gerada pelo crossover
+			int quantidade_individuos_mutantes=populacao.getRowDimension()-quantidade_individuos_nao_mutantes;
+			System.out.print("\t\tAplicando mutacao...");
+			nova_populacao=Mutacao.aplica_mutacao(nova_populacao, taxa_mutacao, 
+												quantidade_individuos_mutantes,tipo_mutacao);
+			System.out.println("aplicada!");
 			
 			//Define a nova populacao depois da mutacao como a populacao definitiva
 			populacao=nova_populacao;

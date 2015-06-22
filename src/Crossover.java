@@ -10,6 +10,7 @@ public class Crossover {
 
 	public static Matrix aplica_crossover(Matrix populacao, double taxa_crossover, 
 										int tipo_crossover, boolean incluir_pais_nova_populacao) {
+		//TODO passar para o crossover uma populacao ordenada pelo fitness
 		if(tipo_crossover==0) {
 			return crossover_ox(populacao, taxa_crossover, incluir_pais_nova_populacao);
 		}
@@ -27,6 +28,7 @@ public class Crossover {
 		Matrix nova_populacao=new Matrix(0, populacao.getColumnDimension());
 		
 		Random random=new Random();
+		//TODO acrescentar Threads!
 		for (int indice_cromossomo = 0; indice_cromossomo < populacao.getRowDimension()-1; indice_cromossomo+=2) {
 			//Pais
 			Matrix cromossomo_P1=JamaUtils.getrow(populacao, indice_cromossomo);
