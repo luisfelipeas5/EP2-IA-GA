@@ -1,4 +1,5 @@
 import java.util.Random;
+
 import edu.umbc.cs.maple.utils.JamaUtils;
 import Jama.Matrix;
 
@@ -9,47 +10,16 @@ import Jama.Matrix;
  */
 public class Selecao {
 
-	public static Matrix seleciona_candidatos(Matrix populacao,Matrix fitness, int operador_selecao,
-			int quantidade_nova_populacao, int quantidade_subpopulacao) {
+	public static Matrix seleciona_candidatos(Matrix populacao,Matrix fitness, int operador_selecao,int quantidade_nova_populacao) {
 		Matrix populacao_nova=new Matrix(0, populacao.getColumnDimension());
 		
-		if(quantidade_subpopulacao!=0) {
-			System.out.print("\t\t\tSelecionando Melhores individuos...");
-			Matrix subpopulacao= seleciona_melhores_individuos(populacao, fitness, quantidade_subpopulacao);
-			populacao_nova=JamaUtils.rowAppend(populacao_nova, subpopulacao);
-			quantidade_nova_populacao-=quantidade_subpopulacao;
-			System.out.println("selecionados!");
-		}
 		if(operador_selecao==0) {
-			System.out.print("\t\t\tSelecionando individuos via Roleta...");
-			Matrix populacao_roleta = roleta(populacao, fitness, quantidade_nova_populacao);
+			//System.out.print("\t\t\tSelecionando individuos via Roleta...");
+			Matrix populacao_roleta = roleta(populacao, fitness,quantidade_nova_populacao);
 			populacao_nova=JamaUtils.rowAppend(populacao_nova, populacao_roleta);
-			System.out.println("selecionados!");
+			//System.out.println("selecionados!");
 		}
 		return populacao_nova;
-	}
-	
-	private static Matrix seleciona_melhores_individuos(Matrix populacao,Matrix fitness, int quantidade_subpopulacao) {
-		Matrix melhores_individuos=new Matrix(0, populacao.getColumnDimension());
-		
-		//Matriz de indices dos cromossomos! Indices vao ser ordenados conforme o fitness
-		Matrix indices_cromossomos=new Matrix(populacao.getRowDimension(), 1);
-		for (int indice = 0; indice < indices_cromossomos.getRowDimension(); indice++) {
-			indices_cromossomos.set(indice, 0, indice);
-		}
-		
-		//Ordena fitness juntamente com os indices correspondentes
-		Matrix fitness_indices_ordenados=Fitness.ordena_fitness(fitness, indices_cromossomos);
-		//Matriz de indice de cromossomo ordenada conforme o fitness
-		indices_cromossomos=JamaUtils.getcol(fitness_indices_ordenados, 1);
-		
-		for (int indice_cromossomo = 0; indice_cromossomo < quantidade_subpopulacao; indice_cromossomo++) {
-			int indice_cromossomo_escolhido = (int)indices_cromossomos.get(indice_cromossomo, 0);
-			Matrix cromossomo_escolhido = JamaUtils.getrow(populacao, indice_cromossomo_escolhido);
-			melhores_individuos = JamaUtils.rowAppend(melhores_individuos, cromossomo_escolhido);
-		}
-		
-		return melhores_individuos;
 	}
 
 	/*Normaliza os valores do fitness de cada um dos cromossomos
@@ -94,6 +64,29 @@ public class Selecao {
 			}
 		}
 		return populacao_nova;
+	}
+	
+	public static Matrix seleciona_melhores_individuos(Matrix populacao,Matrix fitness, int quantidade_subpopulacao) {
+		Matrix melhores_individuos=new Matrix(0, populacao.getColumnDimension());
+		
+		//Matriz de indices dos cromossomos! Indices vao ser ordenados conforme o fitness
+		Matrix indices_cromossomos=new Matrix(populacao.getRowDimension(), 1);
+		for (int indice = 0; indice < indices_cromossomos.getRowDimension(); indice++) {
+			indices_cromossomos.set(indice, 0, indice);
+		}
+		
+		//Ordena fitness juntamente com os indices correspondentes
+		Matrix fitness_indices_ordenados=Fitness.ordena_fitness(fitness, indices_cromossomos);
+		//Matriz de indice de cromossomo ordenada conforme o fitness
+		indices_cromossomos=JamaUtils.getcol(fitness_indices_ordenados, 1);
+		
+		for (int indice_cromossomo = 0; indice_cromossomo < quantidade_subpopulacao; indice_cromossomo++) {
+			int indice_cromossomo_escolhido = (int)indices_cromossomos.get(indice_cromossomo, 0);
+			Matrix cromossomo_escolhido = JamaUtils.getrow(populacao, indice_cromossomo_escolhido);
+			melhores_individuos = JamaUtils.rowAppend(melhores_individuos, cromossomo_escolhido);
+		}
+		
+		return melhores_individuos;
 	}
 
 }

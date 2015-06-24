@@ -42,13 +42,13 @@ public class Crossover {
 			Map<Double, Boolean> cidades_incluidas_F1=new HashMap<Double, Boolean>();
 			Map<Double, Boolean> cidades_incluidas_F2=new HashMap<Double, Boolean>();
 			
-			int corte_posicao_inicial= Math.abs(random.nextInt())%cromossomo_P1.getColumnDimension();
+			int corte_posicao_inicial= (int)Math.ceil(Math.abs(random.nextInt())%cromossomo_P1.getColumnDimension());
 			int corte_posicao_final= corte_posicao_inicial+ (int)(cromossomo_P1.getColumnDimension()*taxa_crossover);
 			corte_posicao_inicial=corte_posicao_inicial%cromossomo_P1.getColumnDimension();
-			corte_posicao_final=corte_posicao_final%cromossomo_P1.getColumnDimension();
+			corte_posicao_final=(int)Math.ceil(corte_posicao_final%cromossomo_P1.getColumnDimension());
 			
 			//itera sobre as cidades na zona de corte
-			for (int i = 0; i < Math.abs(corte_posicao_inicial-corte_posicao_final)+1; i++) {
+			for (int i = 0; i < (int)(cromossomo_P1.getColumnDimension()*taxa_crossover)+1; i++) {
 				int indice_cidade_incluida=corte_posicao_inicial+i;
 				indice_cidade_incluida=indice_cidade_incluida%cromossomo_P1.getColumnDimension();
 				//armazena as cidades que deve ser herdadas de cada um dos pais
@@ -66,7 +66,7 @@ public class Crossover {
 				nova_populacao=JamaUtils.rowAppend(nova_populacao, cromossomo_P2);
 			}
 			//Completar cromossomo filho F1
-			int numero_cidades=Math.abs(corte_posicao_final-corte_posicao_inicial)+1;
+			int numero_cidades=(int)(cromossomo_P2.getColumnDimension()*taxa_crossover+1);
 			int indice_incluir_cidade=(corte_posicao_final+1)%cromossomo_F1.getColumnDimension();
 			for(int indice_posicao=corte_posicao_final+1; numero_cidades<cromossomo_F1.getColumnDimension(); indice_posicao++) {
 				indice_posicao=(indice_posicao)%cromossomo_P2.getColumnDimension();
@@ -90,7 +90,7 @@ public class Crossover {
 			nova_populacao=JamaUtils.rowAppend(nova_populacao, cromossomo_F1);
 			
 			//Completar cromossomo filho F2
-			numero_cidades=Math.abs(corte_posicao_final-corte_posicao_inicial)+1;
+			numero_cidades=(int)(cromossomo_P1.getColumnDimension()*taxa_crossover+1);
 			indice_incluir_cidade=(corte_posicao_final+1)%cromossomo_F2.getColumnDimension();
 			for(int indice_posicao=corte_posicao_final+1; numero_cidades<cromossomo_F2.getColumnDimension(); indice_posicao++) {
 				indice_posicao=(indice_posicao)%cromossomo_P1.getColumnDimension();

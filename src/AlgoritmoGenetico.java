@@ -17,22 +17,25 @@ public class AlgoritmoGenetico {
 		String nome_arquivo=args[3];
 		
 		int tamanho_populacao_inicial=200;
-		int numero_candidatos_crossover=400; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
-		int quantidade_subpopulacao=2; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
 		double diversidade_minima=0;
 		int numero_geracao_maximo=10000;
+		//Parametros de selecao
+		int numero_candidatos_crossover=200; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
+		int quantidade_subpopulacao=10; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
+		//Parametros de crossover
 		/*
 		 * Tipos de Crossover
 		 * 	0: crossover OX
 		 */
 		int tipo_crossover=0;
 		boolean incluir_pais_nova_populacao=true;
+		//Parametros da Mutacao
 		/*
 		 * Tipos de Mutação
 		 *  0: mutacao inversiva
 		 */
-		int tipo_mutacao=0;
-		int quantidade_individuos_nao_mutantes=10;
+		int tipo_mutacao=1;
+		int quantidade_individuos_nao_mutantes=2;
 		
 		System.out.println("Parametros iniciais:");
 		System.out.println("\tTaxa de crossover="+taxa_crossover);
@@ -50,7 +53,7 @@ public class AlgoritmoGenetico {
 		Matrix distancias=calcula_distancias(cidades);
 		
 		//Cada linha da matriz representa um cromossomo; cada elemento uma cidade
-		Matrix populacao=gera_populacao_inicial(cidades.getRowDimension(), tamanho_populacao_inicial);
+		Matrix populacao=gera_populacao_aleatoria(cidades.getRowDimension(), tamanho_populacao_inicial);
 		
 		//Funcao de fitness calculada para saber a diversidade inicial
 		Matrix fitness_inicial=Fitness.fitness(populacao, distancias);
@@ -59,7 +62,7 @@ public class AlgoritmoGenetico {
 		double diversidade=avalia(fitness_inicial)[2];
 		
 		for(int geracao_atual=0; geracao_atual<numero_geracao_maximo && diversidade>diversidade_minima;	geracao_atual++) {
-			System.out.println("Geracao "+geracao_atual);
+			System.out.println("Geracao "+(geracao_atual+1));
 			
 			System.out.println("\t\tTamanho da populacao="+populacao.getRowDimension());
 			
@@ -70,8 +73,13 @@ public class AlgoritmoGenetico {
 			
 			System.out.println("\t\tSelecionando candidatos...");
 			//Gera uma nova populacao com os canditados a crossover
-			Matrix nova_populacao=Selecao.seleciona_candidatos(populacao,fitness_populacao, operador_selecao, 
-																numero_candidatos_crossover, quantidade_subpopulacao);
+			Matrix subpopulacao=Selecao.seleciona_melhores_individuos(populacao, fitness_populacao, quantidade_subpopulacao);
+			Matrix populacao_selecionada=Selecao.seleciona_candidatos(populacao,fitness_populacao, operador_selecao, 
+																	numero_candidatos_crossover);
+			
+			Matrix nova_populacao=new Matrix(0, populacao.getColumnDimension());
+			nova_populacao=JamaUtils.rowAppend(nova_populacao, populacao_selecionada);
+			nova_populacao=JamaUtils.rowAppend(nova_populacao, subpopulacao);
 			System.out.println("\t\tselecionados!");
 			
 			System.out.print("\t\tAplicando crossover...");
@@ -80,10 +88,16 @@ public class AlgoritmoGenetico {
 			System.out.println("aplicado!");
 			
 			//Aplica a mutacao na nova populacao gerada pelo crossover
-			int quantidade_individuos_mutantes=populacao.getRowDimension()-quantidade_individuos_nao_mutantes;
 			System.out.print("\t\tAplicando mutacao...");
-			nova_populacao=Mutacao.aplica_mutacao(nova_populacao, taxa_mutacao, 
-												quantidade_individuos_mutantes,tipo_mutacao);
+			fitness_populacao=Fitness.fitness(nova_populacao, distancias);
+			Matrix populacao_nao_mutante=Selecao.seleciona_melhores_individuos(nova_populacao, fitness_populacao, quantidade_individuos_nao_mutantes);
+			
+			Matrix populacao_mutante=nova_populacao.getMatrix(0, nova_populacao.getRowDimension()-1, 0, nova_populacao.getColumnDimension()-1);
+			populacao_mutante=Mutacao.aplica_mutacao(populacao_mutante, taxa_mutacao,tipo_mutacao);
+			
+			nova_populacao=new Matrix(0, populacao.getColumnDimension());
+			nova_populacao=JamaUtils.rowAppend(nova_populacao, populacao_nao_mutante);
+			nova_populacao=JamaUtils.rowAppend(nova_populacao, populacao_mutante);
 			System.out.println("aplicada!");
 			
 			//Define a nova populacao depois da mutacao como a populacao definitiva
@@ -99,6 +113,7 @@ public class AlgoritmoGenetico {
 		}
 		
 	}
+	
 	 /*
 	  * Calcula a distancia de todas as cidades para todas as cidades
 	  */
@@ -172,29 +187,33 @@ public class AlgoritmoGenetico {
 		return distancia_euclidiana;
 	}
 
-	private static Matrix gera_populacao_inicial(int quant_cidades, int tamanho_populacao_inicial) {
-		Matrix populacao=new Matrix( tamanho_populacao_inicial, quant_cidades);
+	private static Matrix gera_populacao_aleatoria(int quant_cidades, int tamanho_populacao_inicial) {
+		Matrix populacao=new Matrix( 0, quant_cidades);
 		
 		Random random=new Random();
-		for(int indice_cromossomo=0; indice_cromossomo<populacao.getRowDimension(); indice_cromossomo++) {
+		for(int indice_cromossomo=0; indice_cromossomo<tamanho_populacao_inicial; indice_cromossomo++) {
 			//Se a cidade i for incluida no cromossomo, cidade_incluida_cromossomo[i]=1, se não igual a 0;
 			int[] cidade_incluida_cromossomo=new int[quant_cidades];
-			int quantidade_cidades_incluidas=0;
 			
+			Matrix novo_cromossomo=new Matrix(1,0);
 			for(int quant_cidades_incluidas=0; quant_cidades_incluidas<quant_cidades; quant_cidades_incluidas++) {
-				int cidade=(Math.abs(random.nextInt())%quant_cidades);//escolhe randomicamente uma cidade para incluir
+				int indice_cidade=(Math.abs(random.nextInt())%quant_cidades);
+				int cidade=indice_cidade+1;//escolhe randomicamente uma cidade para incluir
 				/*
 				 * se essa cidade ja for incluida,
 				 * busca sequencial para achar a proxima cidade que nao foi escolhida ainda
 				 */
-				while(cidade_incluida_cromossomo[cidade]==1 ) {
-					cidade=((cidade+1)%quant_cidades);
+				while(cidade_incluida_cromossomo[indice_cidade]==1 ) {
+					indice_cidade=(indice_cidade+1)%quant_cidades;
+					cidade=indice_cidade+1;
 				}
-				populacao.set(indice_cromossomo, quantidade_cidades_incluidas, cidade+1);
-				cidade_incluida_cromossomo[cidade]=1;
+				Matrix cidade_matrix=new Matrix(1,1);
+				cidade_matrix.set(0, 0, cidade);
+				novo_cromossomo=JamaUtils.columnAppend(novo_cromossomo, cidade_matrix);
+				cidade_incluida_cromossomo[indice_cidade]=1;
 				
-				quantidade_cidades_incluidas++;
 			}
+			populacao=JamaUtils.rowAppend(populacao, novo_cromossomo);
 		}
 		return populacao;
 	}

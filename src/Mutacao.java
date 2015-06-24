@@ -6,30 +6,59 @@ import Jama.Matrix;
 
 public class Mutacao {
 
-	public static Matrix aplica_mutacao(Matrix populacao,double taxa_mutacao, 
-										int quantidade_individuos_mutantes, int tipo_mutacao) {
+	public static Matrix aplica_mutacao(Matrix populacao,double taxa_mutacao, int tipo_mutacao) {
 		Matrix nova_populacao=new Matrix(0, populacao.getColumnDimension());
-		int quantidade_individuos_nao_mutantes=populacao.getRowDimension()-quantidade_individuos_mutantes;
-		for (int indice_cromossomo_nao_mutante = 0; indice_cromossomo_nao_mutante < quantidade_individuos_nao_mutantes; indice_cromossomo_nao_mutante++) {
-			Matrix cromossomo_nao_mutante=JamaUtils.getrow(populacao, indice_cromossomo_nao_mutante);
-			nova_populacao=JamaUtils.rowAppend(nova_populacao, cromossomo_nao_mutante);
-		}
 		
 		if(tipo_mutacao==0) {
-			Matrix populacao_mutante=mutacao_inversiva( populacao, quantidade_individuos_mutantes, taxa_mutacao );
+			Matrix populacao_mutante=mutacao_inversiva(populacao, taxa_mutacao);
+			nova_populacao=JamaUtils.rowAppend(nova_populacao, populacao_mutante);
+		}else if(tipo_mutacao==1) {
+			Matrix populacao_mutante=mutacao_alternativa( populacao, taxa_mutacao );
 			nova_populacao=JamaUtils.rowAppend(nova_populacao, populacao_mutante);
 		}
 		return nova_populacao;
 	}
 
-	private static Matrix mutacao_inversiva(Matrix populacao, int quantidade_individuos_mutantes,double taxa_mutacao) {
+	/*
+	 * A mutacao inversiva acontece da seguinte forma:
+	 * -iteracao sobre todos os genes do cromossomo:
+	 * 		- gera-se um numero aleatorio
+	 * 		- se esse numero aleatorio eh menor do que a taxa de mutacao:
+	 * 			- o gene troca de lugar como o gene da frente
+	 * 		-se nao, proximo gene eh testado
+	 */
+	private static Matrix mutacao_inversiva(Matrix populacao, double taxa_mutacao) {
+		Matrix populacao_mutante=new Matrix(0,populacao.getColumnDimension());
+		Random random=new Random();
+		//Itera sobre os cromossomos que podem sofrem mutacao
+		for (int indice_cromossomo = 0; indice_cromossomo < populacao.getRowDimension(); indice_cromossomo++) {
+			//Armazena o cromossomo que pode sofrer mutacao
+			Matrix cromossomo_mutante = JamaUtils.getrow(populacao, indice_cromossomo);
+			//itera sobre todos os genes do cromossomos
+			for (int indice_gene = 0; indice_gene < cromossomo_mutante.getColumnDimension(); indice_gene++) {
+				double doubleAleatorio=random.nextDouble(); // gera numero aleatorio
+				//Testa se o gene deve sofrer mutacao
+				if (doubleAleatorio<taxa_mutacao) {
+					double cidade=cromossomo_mutante.get(0, indice_gene);
+					int indice_proximo_gene=(indice_gene+1)%cromossomo_mutante.getColumnDimension();
+					double cidade_proxima=cromossomo_mutante.get(0, indice_proximo_gene);
+					//gene troca de lugar com o proximo gene na sequencia do cromossomo
+					cromossomo_mutante.set(0, indice_proximo_gene, cidade);
+					cromossomo_mutante.set(0, indice_gene, cidade_proxima);
+				}
+			}
+			populacao_mutante=JamaUtils.rowAppend(populacao_mutante, cromossomo_mutante);
+		}
+		return populacao_mutante;
+	}
+
+	private static Matrix mutacao_alternativa(Matrix populacao, double taxa_mutacao) {
 		Matrix nova_populacao=new Matrix(0, populacao.getColumnDimension());
 		
 		//Iterar sobre todos os cromossomos que sofrerao mutacao
 		//No caso, toda a populacao
 		Random random=new Random();
-		int quantidade_individuos_nao_mutantes=populacao.getRowDimension()-quantidade_individuos_mutantes;
-		for (int indice_cromossomo = quantidade_individuos_nao_mutantes; indice_cromossomo < populacao.getRowDimension(); indice_cromossomo++) {
+		for (int indice_cromossomo = 0; indice_cromossomo < populacao.getRowDimension(); indice_cromossomo++) {
 			Matrix cromossomo= JamaUtils.getrow(populacao, indice_cromossomo);
 			
 			//Definir a partir da taxa de mutacao, qual trecho do cromossomo sofrera a mutacao inversiva
