@@ -1,3 +1,4 @@
+package br.com.ia.ga;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;

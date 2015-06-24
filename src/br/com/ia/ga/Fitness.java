@@ -1,3 +1,4 @@
+package br.com.ia.ga;
 import java.util.Arrays;
 
 import edu.umbc.cs.maple.utils.JamaUtils;

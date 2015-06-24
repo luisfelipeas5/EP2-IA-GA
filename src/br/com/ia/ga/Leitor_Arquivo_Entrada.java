@@ -1,3 +1,4 @@
+package br.com.ia.ga;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Iterator;

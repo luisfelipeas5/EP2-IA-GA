@@ -1,5 +1,5 @@
+package br.com.ia.ga;
 import java.util.Random;
-
 import edu.umbc.cs.maple.utils.JamaUtils;
 import Jama.Matrix;
 
@@ -21,7 +21,7 @@ public class AlgoritmoGenetico {
 		int numero_geracao_maximo=10000;
 		//Parametros de selecao
 		int numero_candidatos_crossover=200; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
-		int quantidade_subpopulacao=10; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
+		int quantidade_subpopulacao=20; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
 		//Parametros de crossover
 		/*
 		 * Tipos de Crossover
@@ -35,7 +35,7 @@ public class AlgoritmoGenetico {
 		 *  0: mutacao inversiva
 		 */
 		int tipo_mutacao=1;
-		int quantidade_individuos_nao_mutantes=2;
+		int quantidade_individuos_nao_mutantes=5;
 		
 		System.out.println("Parametros iniciais:");
 		System.out.println("\tTaxa de crossover="+taxa_crossover);
@@ -117,7 +117,7 @@ public class AlgoritmoGenetico {
 	 /*
 	  * Calcula a distancia de todas as cidades para todas as cidades
 	  */
-	private static Matrix calcula_distancias(Matrix cidades) {
+	public static Matrix calcula_distancias(Matrix cidades) {
 		Matrix distancias=new Matrix(cidades.getRowDimension(), cidades.getRowDimension());
 		
 		for (int indice_cidade_x = 0; indice_cidade_x < cidades.getRowDimension(); indice_cidade_x++) {
@@ -143,7 +143,7 @@ public class AlgoritmoGenetico {
 	 * 1- media dos fitness
 	 * 2- diversidade
 	 */
-	private static double[] avalia(Matrix fitness) {
+	public static double[] avalia(Matrix fitness) {
 		double[] avaliacao=new double[3];
 		
 		double diversidade=0;
@@ -173,7 +173,7 @@ public class AlgoritmoGenetico {
 	 * d= ( (p1-q1)^2 + (p2-q2)^2 +...+ (pn-qn)^2 )^(1/(n)), sendo
 	 * n=numero de dimensoes
 	 */
-	private static double distancia_euclidiana(Matrix cidade_atual,	Matrix cidade_proxima) {
+	public static double distancia_euclidiana(Matrix cidade_atual,	Matrix cidade_proxima) {
 		double distancia_euclidiana=0;
 		int numero_dimensoes=cidade_atual.getColumnDimension();
 		for (int dimensao = 0; dimensao < numero_dimensoes; dimensao++) {
@@ -187,7 +187,7 @@ public class AlgoritmoGenetico {
 		return distancia_euclidiana;
 	}
 
-	private static Matrix gera_populacao_aleatoria(int quant_cidades, int tamanho_populacao_inicial) {
+	public static Matrix gera_populacao_aleatoria(int quant_cidades, int tamanho_populacao_inicial) {
 		Matrix populacao=new Matrix( 0, quant_cidades);
 		
 		Random random=new Random();
