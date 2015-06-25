@@ -66,6 +66,15 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		//matriz que armazena as distancias entre cada uma das cidades
 		Matrix distancias=calcula_distancias(cidades);
 		
+		Matrix populacao_teste = new Matrix(1, 100);
+		for (int i = 0; i < 100; i++) {
+			populacao_teste.set(0, i, i+1);
+		}
+		Matrix fitness = Fitness.fitness(populacao_teste, distancias);
+		System.out.print("fitness");
+		fitness.print(0, 10);
+		System.exit(0);
+		
 		//Cada linha da matriz representa um cromossomo; cada elemento uma cidade
 		Matrix populacao=gera_populacao_aleatoria(cidades.getRowDimension(), tamanho_populacao_inicial);
 		
