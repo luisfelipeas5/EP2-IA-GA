@@ -15,11 +15,13 @@ public class Fitness {
 			Matrix cromossomo=JamaUtils.getrow(populacao, indice_cromossomo);
 			double distancia_total=0;
 			//Somar as distancias entre as cidades
-			for (int indice_cidade_cromossomo = 0; indice_cidade_cromossomo < cromossomo.getColumnDimension(); indice_cidade_cromossomo++) {
-				int indice_cidade=(((int)cromossomo.get(0, indice_cidade_cromossomo))-1);
-				int indice_cidade_proxima=(((int)cromossomo.get(0, (indice_cidade_cromossomo)%cromossomo.getColumnDimension() )))%cromossomo.getColumnDimension();
+			for (int indice_gene = 0; indice_gene < cromossomo.getColumnDimension(); indice_gene++) {
+				int cidade=(((int)cromossomo.get(0, indice_gene)));
 				
-				double distancia_da_proxima_cidade= distancias_entre_cidades.get(indice_cidade, indice_cidade_proxima);
+				int indice_proximo_gene=(indice_gene+1)%cromossomo.getColumnDimension();
+				int proxima_cidade=(int)cromossomo.get( 0, indice_proximo_gene );
+				
+				double distancia_da_proxima_cidade= distancias_entre_cidades.get(cidade-1, proxima_cidade-1);
 				distancia_total+=distancia_da_proxima_cidade;
 			}
 			//Adicionar fitness desse cromossomo na matriz de fitness

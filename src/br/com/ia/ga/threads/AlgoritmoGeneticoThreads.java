@@ -26,7 +26,7 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		
 		int tamanho_populacao_inicial=200;
 		double diversidade_minima=0;
-		int numero_geracao_maximo=1000;
+		int numero_geracao_maximo=10000;
 		//Parametros de selecao
 		int numero_candidatos_crossover=200; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
 		int quantidade_subpopulacao=10; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
