@@ -1,11 +1,13 @@
 CHECKLIST:
 	FORA DOS REQUISITOS:
 		- Otimizacao
+			-Sugestão para proximo passo para otimizar: criar classe CrossoverMutacaoThread
+				isso evita que sejam criadas mais threads durante a execucao e dividir novamente a populacao
 	REQUISITOS MÍNIMOS:
 		OK - Codificação com números inteiros
 		OK - Função de fitness
 		OK - Crossover OX 
-		- Mutação Inversa
+		OK - Mutação Inversa
 		PARÂMETROS:
 			OK - Taxa de crossover
 			OK - Taxa de mutação
@@ -13,6 +15,7 @@ CHECKLIST:
 		MOSTRAR NA TELA:
 			OK - Progressão da evolução
 			- Gravar em arquivo texto os melhores indivíduos
+			- Graficos
 	REQUISITOS DESEJAVEIS:
 		- Implementar outros tipos de Selecao
 		- Implementar outros tipos de Crossover

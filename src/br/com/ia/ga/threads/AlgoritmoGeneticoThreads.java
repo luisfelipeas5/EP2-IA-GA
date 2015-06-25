@@ -26,7 +26,7 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		
 		int tamanho_populacao_inicial=200;
 		double diversidade_minima=0;
-		int numero_geracao_maximo=10000;
+		int numero_geracao_maximo=1000;
 		//Parametros de selecao
 		int numero_candidatos_crossover=200; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
 		int quantidade_subpopulacao=10; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
@@ -41,9 +41,15 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		/*
 		 * Tipos de Mutação
 		 *  0: mutacao inversiva
+		 *  1: mutacao alternativa
+		 *  2: mutacao inversica alterada
 		 */
-		int tipo_mutacao=0;
-		int quantidade_individuos_nao_mutantes=5;
+		int tipo_mutacao=2;
+		int quantidade_individuos_nao_mutantes=1;
+		
+		//parametros para populacao aleatoria
+		int tamanho_populacao_aleatoria=0;
+		int geracao_populacao_aleatoria=Integer.MAX_VALUE;
 		
 		System.out.println("Parametros iniciais:");
 		System.out.println("\tTaxa de crossover="+taxa_crossover);
@@ -168,6 +174,11 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 			nova_populacao=JamaUtils.rowAppend(nova_populacao, populacao_mutante);
 			//System.out.println("aplicada!");
 			
+			if(geracao_atual%geracao_populacao_aleatoria==0) {
+				Matrix populaca_aleatoria=gera_populacao_aleatoria(populacao.getColumnDimension(), tamanho_populacao_aleatoria);
+				nova_populacao=JamaUtils.rowAppend(nova_populacao, populaca_aleatoria);
+			}
+			
 			//Define a nova populacao depois da mutacao como a populacao definitiva
 			populacao=nova_populacao;
 			
@@ -178,8 +189,19 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 			System.out.print("\tmelhor fitness="+medidas_avaliacao[0]+
 							" media="+medidas_avaliacao[1]+
 							" diversidade="+medidas_avaliacao[2]+"\n");
+			
 		}
+		
+		Matrix fitness_final = Fitness.fitness(populacao, distancias);
+		Matrix melhor_cromossomo=Selecao.seleciona_melhores_individuos(populacao, fitness_final, 1);
+		
+		System.out.print("\nMelhor Caminho (Solucao) encontrado:");
+		melhor_cromossomo.print(0, 0);
+		
 		long tempo_final = System.currentTimeMillis();
-		System.out.println("Duracao="+(tempo_final-tempo_inicial)/1000);
+		System.out.print("Duracao="+((tempo_final-tempo_inicial)/1000)+"s");
+		System.out.print("="+((tempo_final-tempo_inicial)/60000)+"min");
+		System.out.print("="+((tempo_final-tempo_inicial)/3600000)+"h");
+		
 	}
 }

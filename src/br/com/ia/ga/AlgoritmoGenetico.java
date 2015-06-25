@@ -34,7 +34,7 @@ public class AlgoritmoGenetico {
 		 * Tipos de Mutação
 		 *  0: mutacao inversiva
 		 */
-		int tipo_mutacao=1;
+		int tipo_mutacao=2;
 		int quantidade_individuos_nao_mutantes=5;
 		
 		System.out.println("Parametros iniciais:");

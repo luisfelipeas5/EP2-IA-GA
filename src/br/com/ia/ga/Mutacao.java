@@ -16,8 +16,54 @@ public class Mutacao {
 		}else if(tipo_mutacao==1) {
 			Matrix populacao_mutante=mutacao_alternativa( populacao, taxa_mutacao );
 			nova_populacao=JamaUtils.rowAppend(nova_populacao, populacao_mutante);
+		}else if(tipo_mutacao==2) {
+			Matrix populacao_mutante=mutacao_inversiva_alterada( populacao, taxa_mutacao );
+			nova_populacao=JamaUtils.rowAppend(nova_populacao, populacao_mutante);
 		}
 		return nova_populacao;
+	}
+	
+	/*
+	 * A mutacao inversiva alterada acontece da seguinte forma:
+	 * -iteracao sobre todos os genes do cromossomo:
+	 * 		- gera-se um numero aleatorio
+	 * 		- se esse numero aleatorio eh menor do que a taxa de mutacao:
+	 * 			- o gene assume o lugar de uma gene aleatorio e realiza o shif para esquerda
+	 * 		-se nao, proximo gene eh testado
+	 */
+	private static Matrix mutacao_inversiva_alterada(Matrix populacao,double taxa_mutacao) {
+		Matrix populacao_mutante=new Matrix(0,populacao.getColumnDimension());
+		Random random=new Random();
+		//Itera sobre os cromossomos que podem sofrem mutacao
+		for (int indice_cromossomo = 0; indice_cromossomo < populacao.getRowDimension(); indice_cromossomo++) {
+			//Armazena o cromossomo que pode sofrer mutacao
+			Matrix cromossomo_mutante = JamaUtils.getrow(populacao, indice_cromossomo);
+			//itera sobre todos os genes do cromossomos
+			for (int indice_gene = 0; indice_gene < cromossomo_mutante.getColumnDimension(); indice_gene++) {
+				double doubleAleatorio=random.nextDouble(); // gera numero aleatorio
+				//Testa se o gene deve sofrer mutacao
+				if (doubleAleatorio<taxa_mutacao) {
+					double cidade=cromossomo_mutante.get(0, indice_gene);
+					//Gera nova posicao aleatoria
+					int indice_nova_posicao=Math.abs(random.nextInt())%cromossomo_mutante.getColumnDimension();
+					if(indice_nova_posicao==indice_gene) {
+						indice_nova_posicao=(indice_nova_posicao+1)%cromossomo_mutante.getColumnDimension();
+					}
+					//Move todos os genes para abrir espaco para a cidade
+					int indice_posicao_shift=indice_gene;
+					for (int indice_cidade_movida = indice_posicao_shift+1; indice_cidade_movida != indice_nova_posicao+1 ; indice_cidade_movida++) {
+						indice_cidade_movida=indice_cidade_movida%cromossomo_mutante.getColumnDimension();
+						double cidade_movida=cromossomo_mutante.get(0, indice_cidade_movida);
+						cromossomo_mutante.set(0, indice_posicao_shift, cidade_movida);
+						indice_posicao_shift=indice_cidade_movida;
+					}
+					//Gene escolhido eh posicionada no seu novo lugar aberto pelo shift
+					cromossomo_mutante.set(0, indice_nova_posicao, cidade);
+				}
+			}
+			populacao_mutante=JamaUtils.rowAppend(populacao_mutante, cromossomo_mutante);
+		}
+		return populacao_mutante;
 	}
 
 	/*
