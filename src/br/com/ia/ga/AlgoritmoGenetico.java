@@ -35,7 +35,7 @@ public class AlgoritmoGenetico {
 		 *  0: mutacao inversiva
 		 */
 		int tipo_mutacao=2;
-		int quantidade_individuos_nao_mutantes=5;
+		int quantidade_cromossomo_nao_mutantes=5;
 		
 		System.out.println("Parametros iniciais:");
 		System.out.println("\tTaxa de crossover="+taxa_crossover);
@@ -90,7 +90,7 @@ public class AlgoritmoGenetico {
 			//Aplica a mutacao na nova populacao gerada pelo crossover
 			System.out.print("\t\tAplicando mutacao...");
 			fitness_populacao=Fitness.fitness(nova_populacao, distancias);
-			Matrix populacao_nao_mutante=Selecao.seleciona_melhores_individuos(nova_populacao, fitness_populacao, quantidade_individuos_nao_mutantes);
+			Matrix populacao_nao_mutante=Selecao.seleciona_melhores_individuos(nova_populacao, fitness_populacao, quantidade_cromossomo_nao_mutantes);
 			
 			Matrix populacao_mutante=nova_populacao.getMatrix(0, nova_populacao.getRowDimension()-1, 0, nova_populacao.getColumnDimension()-1);
 			populacao_mutante=Mutacao.aplica_mutacao(populacao_mutante, taxa_mutacao,tipo_mutacao);

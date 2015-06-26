@@ -10,10 +10,10 @@ import br.com.ia.ga.Selecao;
 public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 	public static void main(String[] args) {
 		/*
-		 *PARÂMETROS:
+		 *PARAMETROS:
 		 *	- Taxa de crossover
-		 *	- Taxa de mutação
-		 *	- Operador de seleção
+		 *	- Taxa de mutacao
+		 *	- Operador de selecao
 		 */
 		double taxa_crossover=Double.parseDouble(args[0]);
 		double taxa_mutacao=Double.parseDouble(args[1]);
@@ -26,7 +26,7 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		
 		int tamanho_populacao_inicial=200;
 		double diversidade_minima=0;
-		int numero_geracao_maximo=10000;
+		int numero_geracao_maximo=50000;
 		//Parametros de selecao
 		int numero_candidatos_crossover=200; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
 		int quantidade_subpopulacao=10; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
@@ -40,12 +40,13 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		//Parametros da Mutacao
 		/*
 		 * Tipos de Mutação
-		 *  0: mutacao inversiva
+		 *  0: mutacao simples
 		 *  1: mutacao alternativa
-		 *  2: mutacao inversica alterada
+		 *  2: variacao da mutacao inversivivel
+		 *  3: mutacao inversivivel #nao implementada
 		 */
-		int tipo_mutacao=2;
-		int quantidade_individuos_nao_mutantes=1;
+		int tipo_mutacao=1;
+		int quantidade_cromossomo_nao_mutantes=1;
 		
 		//parametros para populacao aleatoria
 		int tamanho_populacao_aleatoria=0;
@@ -139,7 +140,7 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 			//System.out.print("\t\tAplicando mutacao...");
 			//Separa os n melhores individuos que nao sofreram mutacao. n=quantidade_individuos_nao_mutantes
 			fitness_populacao=Fitness.fitness(nova_populacao, distancias);
-			Matrix populacao_nao_mutante=Selecao.seleciona_melhores_individuos(nova_populacao, fitness_populacao, quantidade_individuos_nao_mutantes);
+			Matrix populacao_nao_mutante=Selecao.seleciona_melhores_individuos(nova_populacao, fitness_populacao, quantidade_cromossomo_nao_mutantes);
 			//Declara a a matrix que armazenara os cromossomos mutantes
 			Matrix populacao_mutante=new Matrix(0, populacao.getColumnDimension());
 			//Cria vetor com as novas threads que faram as mutacoes
@@ -197,6 +198,7 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		
 		System.out.print("\nMelhor Caminho (Solucao) encontrado:");
 		melhor_cromossomo.print(0, 0);
+		
 		
 		long tempo_final = System.currentTimeMillis();
 		System.out.print("Duracao="+((tempo_final-tempo_inicial)/1000)+"s");

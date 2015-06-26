@@ -25,3 +25,17 @@ Parâmetros adicionais:
 		Controle do crossover se os pais vao ou nao na populacao pos-crossover: incluir_pais_nova_populacao;
 			- incluir_pais_nova_populacao=true : pais vao continuar na populacao pos-crossover;
 			- incluir_pais_nova_populacao=false : pais nao vao continuar na populacao pos-crossover;
+		Tipo da mutacao: tipo_mutacao:
+			- tipo_mutacao=0 : mutacao simples
+			- tipo_mutacao=1 : mutacao alternativa
+			- tipo_mutacao=2 : variacao da mutacao inversivel
+		Quantidade de cromossomos que nao sofrerão mutação: quantidade_cromossomos_nao_mutantes;
+		Tamanho da populacao aleatoria no final de cada geracao: tamanho_populacao_aleatoria;
+		Intervalo de tempo para acrescentar populacao aleatoria: geracao_populacao_aleatoria;
+
+Algoritmo com Multi-Thread x sem Multi-Thread:
+	Fizemos duas implementacoes do AlgoritmoGenetico.java:
+	Sem Multi-Thread: AlgoritmoGenetico.java
+	Com Multi-Thread: AlgoritmoGeneticoThread.java
+		- recebe um parâmetro a mais: o número de Threads para executar o crossover e a mutacão: numero_threads
+	

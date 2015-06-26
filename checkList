@@ -1,4 +1,36 @@
 CHECKLIST:
+	RELATORIO:
+		-Observar:
+			-Melhor Fitness:	
+				-Mudando crossover
+				-Mudando mutacao
+				-Mudando Tamanho populacao
+				-Mudando Tamanho Subpopulacao
+				-Mudando Numero de Individuos Mutantes
+				-Mudando Numero de Geracoes
+				-Pais sobrevivendo ou nao
+				-Mudando numero de candidatos a crossover
+			-Media Fitness:	
+				-Mudando crossover
+				-Mudando mutacao
+				-Mudando Tamanho populacao
+				-Mudando Tamanho Subpopulacao
+				-Mudando Numero de Individuos Mutantes
+				-Mudando Numero de Geracoes
+				-Pais sobrevivendo ou nao
+				-Mudando numero de candidatos a crossover
+			-Diversidade:	
+				-Mudando crossover
+				-Mudando mutacao
+				-Mudando Tamanho populacao
+				-Mudando Tamanho Subpopulacao
+				-Mudando Numero de Individuos Mutantes
+				-Mudando Numero de Geracoes
+				-Pais sobrevivendo ou nao
+				-Mudando numero de candidatos a crossover
+			-Tempo:
+				-Sem Threads
+				-Mudando Numero de Threads
 	FORA DOS REQUISITOS:
 		- Otimizacao
 			-Sugestão para proximo passo para otimizar: criar classe CrossoverMutacaoThread
