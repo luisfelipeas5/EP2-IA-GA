@@ -2,67 +2,22 @@ package br.com.ia.ga.threads;
 
 import edu.umbc.cs.maple.utils.JamaUtils;
 import Jama.Matrix;
+import br.com.ia.Leitor_Arquivo_Entrada;
 import br.com.ia.ga.AlgoritmoGenetico;
 import br.com.ia.ga.Fitness;
-import br.com.ia.ga.Leitor_Arquivo_Entrada;
 import br.com.ia.ga.Selecao;
 
 public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
-	public static void main(String[] args) {
-		/*
-		 *PARAMETROS:
-		 *	- Taxa de crossover
-		 *	- Taxa de mutacao
-		 *	- Operador de selecao
-		 */
-		double taxa_crossover=Double.parseDouble(args[0]);
-		double taxa_mutacao=Double.parseDouble(args[1]);
-		int operador_selecao=Integer.parseInt(args[2]);
-		String nome_arquivo=args[3];
-		
-		long tempo_inicial = System.currentTimeMillis();
-		
-		int numero_threads=4;
-		
-		int tamanho_populacao_inicial=200;
-		double diversidade_minima=0;
-		int numero_geracao_maximo=50000;
-		//Parametros de selecao
-		int numero_candidatos_crossover=200; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
-		int quantidade_subpopulacao=10; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
-		//Parametros de crossover
-		/*
-		 * Tipos de Crossover
-		 * 	0: crossover OX
-		 */
-		int tipo_crossover=0;
-		boolean pais_sobrevivem=true;
-		//Parametros da Mutacao
-		/*
-		 * Tipos de Mutação
-		 *  0: mutacao simples
-		 *  1: mutacao alternativa
-		 *  2: variacao da mutacao inversivivel
-		 *  3: mutacao inversivivel #nao implementada
-		 */
-		int tipo_mutacao=1;
-		int quantidade_cromossomo_nao_mutantes=1;
-		
-		//parametros para populacao aleatoria
-		int tamanho_populacao_aleatoria=0;
-		int geracao_populacao_aleatoria=Integer.MAX_VALUE;
-		
-		System.out.println("Parametros iniciais:");
-		System.out.println("\tTaxa de crossover="+taxa_crossover);
-		System.out.println("\tTaxa de mutacao="+taxa_mutacao);
-		System.out.println("\tOperador de selecao="+operador_selecao);
-		System.out.println("\tTamanho da Populacao inicial="+tamanho_populacao_inicial);
-		System.out.println("\tDiversidade minima="+diversidade_minima);
-		System.out.println("\tNumero maximo de geracoes="+numero_geracao_maximo);
-		System.out.println();
-		
-		//matriz de cada uma das cidades que irao compor o cromossomo
-		Matrix cidades=Leitor_Arquivo_Entrada.lee_arquivo(nome_arquivo);
+	public static Matrix get_melhor_caminho(Matrix cidades,
+												int tamanho_populacao_inicial, int numero_geracao_maximo,
+												double diversidade_minima, int operador_selecao,
+												int numero_candidatos_crossover, int quantidade_subpopulacao,
+												double taxa_crossover, int tipo_crossover, boolean pais_sobrevivem,
+												double taxa_mutacao, int tipo_mutacao,
+												int quantidade_cromossomo_nao_mutantes,
+												int geracao_populacao_aleatoria, int tamanho_populacao_aleatoria, 
+												int numero_threads) {
+		Matrix melhor_cromossomo=null;
 		
 		//matriz que armazena as distancias entre cada uma das cidades
 		Matrix distancias=calcula_distancias(cidades);
@@ -78,6 +33,16 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		
 		for(int geracao_atual=0; geracao_atual<numero_geracao_maximo && diversidade>diversidade_minima;	geracao_atual++) {
 			System.out.println("Geracao "+(geracao_atual+1));
+			
+			/*
+			 * Inclui populacao aleatoria e tamanho n a cada m geracoes
+			 * n=tamanho_populacao_aleatoria
+			 * m=geracao_populacao_aleatoria
+			 */
+			if(geracao_atual%geracao_populacao_aleatoria==0 && geracao_atual!=0) {
+				Matrix populaca_aleatoria=gera_populacao_aleatoria(populacao.getColumnDimension(), tamanho_populacao_aleatoria);
+				populacao=JamaUtils.rowAppend(populacao, populaca_aleatoria);
+			}
 			
 			//System.out.println("\t\tTamanho da populacao="+populacao.getRowDimension());
 			
@@ -175,11 +140,6 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 			nova_populacao=JamaUtils.rowAppend(nova_populacao, populacao_mutante);
 			//System.out.println("aplicada!");
 			
-			if(geracao_atual%geracao_populacao_aleatoria==0) {
-				Matrix populaca_aleatoria=gera_populacao_aleatoria(populacao.getColumnDimension(), tamanho_populacao_aleatoria);
-				nova_populacao=JamaUtils.rowAppend(nova_populacao, populaca_aleatoria);
-			}
-			
 			//Define a nova populacao depois da mutacao como a populacao definitiva
 			populacao=nova_populacao;
 			
@@ -194,16 +154,81 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		}
 		
 		Matrix fitness_final = Fitness.fitness(populacao, distancias);
-		Matrix melhor_cromossomo=Selecao.seleciona_melhores_individuos(populacao, fitness_final, 1);
+		melhor_cromossomo=Selecao.seleciona_melhores_individuos(populacao, fitness_final, 1);
+		
+		return melhor_cromossomo;
+	}
+	
+	public static void main(String[] args) {
+		/*
+		 *PARAMETROS:
+		 *	- Taxa de crossover
+		 *	- Taxa de mutacao
+		 *	- Operador de selecao
+		 */
+		double taxa_crossover=Double.parseDouble(args[0]);
+		double taxa_mutacao=Double.parseDouble(args[1]);
+		int operador_selecao=Integer.parseInt(args[2]);
+		String nome_arquivo=args[3];
+		
+		long tempo_inicial = System.currentTimeMillis();
+		
+		int numero_threads=4;
+		
+		int tamanho_populacao_inicial=200;
+		double diversidade_minima=0;
+		int numero_geracao_maximo=100;
+		//Parametros de selecao
+		int numero_candidatos_crossover=200; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
+		int quantidade_subpopulacao=10; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
+		//Parametros de crossover
+		/*
+		 * Tipos de Crossover
+		 * 	0: crossover OX
+		 */
+		int tipo_crossover=0;
+		boolean pais_sobrevivem=true;
+		//Parametros da Mutacao
+		/*
+		 * Tipos de Mutação
+		 *  0: mutacao simples
+		 *  1: mutacao alternativa
+		 *  2: variacao da mutacao inversivivel
+		 *  3: mutacao inversivivel #nao implementada
+		 */
+		int tipo_mutacao=1;
+		int quantidade_cromossomo_nao_mutantes=1;
+		
+		//parametros para populacao aleatoria
+		int tamanho_populacao_aleatoria=0;
+		int geracao_populacao_aleatoria=Integer.MAX_VALUE;
+		
+		System.out.println("Parametros iniciais:");
+		System.out.println("\tTaxa de crossover="+taxa_crossover);
+		System.out.println("\tTaxa de mutacao="+taxa_mutacao);
+		System.out.println("\tOperador de selecao="+operador_selecao);
+		System.out.println("\tTamanho da Populacao inicial="+tamanho_populacao_inicial);
+		System.out.println("\tDiversidade minima="+diversidade_minima);
+		System.out.println("\tNumero maximo de geracoes="+numero_geracao_maximo);
+		System.out.println();
+		
+		//matriz de cada uma das cidades que irao compor o cromossomo
+		Matrix cidades=Leitor_Arquivo_Entrada.lee_arquivo(nome_arquivo);
+		
+		Matrix melhor_cromossomo=get_melhor_caminho(cidades,
+													tamanho_populacao_inicial, numero_geracao_maximo, diversidade_minima,
+													operador_selecao, numero_candidatos_crossover, quantidade_subpopulacao,
+													taxa_crossover, tipo_crossover, pais_sobrevivem,
+													taxa_mutacao, tipo_mutacao, quantidade_cromossomo_nao_mutantes,
+													geracao_populacao_aleatoria, tamanho_populacao_aleatoria,
+													numero_threads);
 		
 		System.out.print("\nMelhor Caminho (Solucao) encontrado:");
 		melhor_cromossomo.print(0, 0);
-		
 		
 		long tempo_final = System.currentTimeMillis();
 		System.out.print("Duracao="+((tempo_final-tempo_inicial)/1000)+"s");
 		System.out.print("="+((tempo_final-tempo_inicial)/60000)+"min");
 		System.out.print("="+((tempo_final-tempo_inicial)/3600000)+"h");
-		
 	}
 }

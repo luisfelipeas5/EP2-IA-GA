@@ -1,4 +1,4 @@
-package br.com.ia.ga;
+package br.com.ia;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Iterator;
@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import Jama.Matrix;
-
 
 public class Leitor_Arquivo_Entrada {
 

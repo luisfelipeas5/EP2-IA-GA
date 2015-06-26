@@ -32,10 +32,24 @@ Parâmetros adicionais:
 		Quantidade de cromossomos que nao sofrerão mutação: quantidade_cromossomos_nao_mutantes;
 		Tamanho da populacao aleatoria no final de cada geracao: tamanho_populacao_aleatoria;
 		Intervalo de tempo para acrescentar populacao aleatoria: geracao_populacao_aleatoria;
+		Numero de threads adicionais alem da Thread Main para realizar o crossover e a mutacao: numero_threads
 
 Algoritmo com Multi-Thread x sem Multi-Thread:
 	Fizemos duas implementacoes do AlgoritmoGenetico.java:
 	Sem Multi-Thread: AlgoritmoGenetico.java
 	Com Multi-Thread: AlgoritmoGeneticoThread.java
-		- recebe um parâmetro a mais: o número de Threads para executar o crossover e a mutacão: numero_threads
-	
+		-No momento do crossover ou da mutacao, esse algoritmo separa a populacao n partes iguais para realizar determinada
+			operacao, sendo n o numero de threads que foi passado como parametro.
+	Por exemplo:
+		Se numero_threads=0,
+			A classe Caixeiro ira usar o algoritmo da classe AlgoritmoGenetico para obter o melhor caminho,
+			utilizando a propia thread main para realizar o crossover sobre a populacao inteira, assim como a mutacao.
+		Se numero_threads=1,
+			A classe Caixeiro ira usar o algortimo da classe AlgoritmoGeneticoThreads para obter o melhor caminho,
+			utilizando uma outra thread, que nao é a thread main, para realizar o crossover sobre a populacao inteira,
+			assim como a mutacao. Enquanto isso a thread main fica aguardando a thread terminar
+		Se numero_threads=2,
+			A classe Caixeiro ira usar o algortimo da classe AlgoritmoGeneticoThreads para obter o melhor caminho,
+			utilizando duas threads a mais. Cada Uma das threads operara sobre (1/n) da populacao, sendo n=2, entao,
+			cada thread operara sobre 1/2 da populacao para realizar o crossover e a mutacao.
+			Enquanto isso a thread main fica aguardando as threads terminar.	
