@@ -18,11 +18,11 @@ public class Caixeiro {
 		
 		long tempo_inicial = System.currentTimeMillis();
 		
-		int numero_threads=4;
+		int numero_threads=3;
 		
 		int tamanho_populacao_inicial=200;
 		double diversidade_minima=0;
-		int numero_geracao_maximo=100;
+		int numero_geracao_maximo=10000;
 		//Parametros de selecao
 		int numero_candidatos_crossover=200; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
 		int quantidade_subpopulacao=10; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
@@ -30,8 +30,10 @@ public class Caixeiro {
 		/*
 		 * Tipos de Crossover
 		 * 	0: crossover OX
+		 * 	1: baseado em posicao
+		 * 	2: baseado em ordem
 		 */
-		int tipo_crossover=0;
+		int tipo_crossover=2;
 		boolean pais_sobrevivem=true;
 		//Parametros da Mutacao
 		/*
