@@ -22,7 +22,7 @@ public class AlgoritmoGenetico {
 		Matrix populacao=AlgoritmoGenetico.gera_populacao_aleatoria(cidades.getRowDimension(), tamanho_populacao_inicial);
 		
 		//Funcao de fitness calculada para saber a diversidade inicial
-		Matrix fitness_inicial=Fitness.fitness(populacao, distancias);
+		Matrix fitness_inicial=Fitness.calcula_fitness(populacao, distancias);
 		
 		//calcula-se a diversidade da populacao inicial
 		double diversidade=avalia(fitness_inicial)[2];
@@ -34,7 +34,7 @@ public class AlgoritmoGenetico {
 			
 			System.out.print("\t\tCalculando fitness...");
 			//Calcula o fitness da nova geracao
-			Matrix fitness_populacao=Fitness.fitness(populacao, distancias);
+			Matrix fitness_populacao=Fitness.calcula_fitness(populacao, distancias);
 			System.out.println("calculado!");
 			
 			System.out.println("\t\tSelecionando candidatos...");
@@ -55,7 +55,7 @@ public class AlgoritmoGenetico {
 			
 			//Aplica a mutacao na nova populacao gerada pelo crossover
 			System.out.print("\t\tAplicando mutacao...");
-			fitness_populacao=Fitness.fitness(nova_populacao, distancias);
+			fitness_populacao=Fitness.calcula_fitness(nova_populacao, distancias);
 			Matrix populacao_nao_mutante=Selecao.seleciona_melhores_individuos(nova_populacao, fitness_populacao, quantidade_cromossomo_nao_mutantes);
 			
 			Matrix populacao_mutante=nova_populacao.getMatrix(0, nova_populacao.getRowDimension()-1, 0, nova_populacao.getColumnDimension()-1);
@@ -77,7 +77,7 @@ public class AlgoritmoGenetico {
 							" media="+medidas_avaliacao[1]+
 							" diversidade="+medidas_avaliacao[2]+"\n");
 		}
-		Matrix fitness_final = Fitness.fitness(populacao, distancias);
+		Matrix fitness_final = Fitness.calcula_fitness(populacao, distancias);
 		melhor_cromossomo=Selecao.seleciona_melhores_individuos(populacao, fitness_final, 1);
 		
 		return melhor_cromossomo;

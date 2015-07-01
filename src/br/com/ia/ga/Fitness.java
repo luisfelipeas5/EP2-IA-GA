@@ -6,7 +6,7 @@ import Jama.Matrix;
 
 public class Fitness {
 	
-	public static Matrix fitness(Matrix populacao, Matrix distancias_entre_cidades) {
+	public static Matrix calcula_fitness(Matrix populacao, Matrix distancias_entre_cidades) {
 		Matrix fitness = new Matrix(populacao.getRowDimension(), 1);
 		//calcular o fitness de cada um dos cromossomos da populacao
 		for (int indice_cromossomo = 0; indice_cromossomo < populacao.getRowDimension(); indice_cromossomo++) {
