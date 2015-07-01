@@ -4,7 +4,6 @@ import java.util.Arrays;
 import edu.umbc.cs.maple.utils.JamaUtils;
 import Jama.Matrix;
 
-
 public class Fitness {
 	
 	public static Matrix fitness(Matrix populacao, Matrix distancias_entre_cidades) {

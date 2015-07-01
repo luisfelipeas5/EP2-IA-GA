@@ -11,7 +11,7 @@ public class Mutacao {
 		Matrix nova_populacao=new Matrix(0, populacao.getColumnDimension());
 		
 		if(tipo_mutacao==0) {
-			Matrix populacao_mutante=mutacao_inversiva(populacao, taxa_mutacao);
+			Matrix populacao_mutante=mutacao_simples(populacao, taxa_mutacao);
 			nova_populacao=JamaUtils.rowAppend(nova_populacao, populacao_mutante);
 		}else if(tipo_mutacao==1) {
 			Matrix populacao_mutante=mutacao_alternativa( populacao, taxa_mutacao );
@@ -67,14 +67,14 @@ public class Mutacao {
 	}
 
 	/*
-	 * A mutacao inversiva acontece da seguinte forma:
+	 * A mutacao simples acontece da seguinte forma:
 	 * -iteracao sobre todos os genes do cromossomo:
 	 * 		- gera-se um numero aleatorio
 	 * 		- se esse numero aleatorio eh menor do que a taxa de mutacao:
 	 * 			- o gene troca de lugar como o gene da frente
 	 * 		-se nao, proximo gene eh testado
 	 */
-	private static Matrix mutacao_inversiva(Matrix populacao, double taxa_mutacao) {
+	private static Matrix mutacao_simples(Matrix populacao, double taxa_mutacao) {
 		Matrix populacao_mutante=new Matrix(0,populacao.getColumnDimension());
 		Random random=new Random();
 		//Itera sobre os cromossomos que podem sofrem mutacao

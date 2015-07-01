@@ -11,7 +11,7 @@ Alunos:
 
 Pacotes necessários:
   Jama (http://math.nist.gov/javanumerics/jama/#Package)
-  JamaUtil (http://www.seas.upenn.edu/~eeaton/software.html)
+  JamaUtils (http://www.seas.upenn.edu/~eeaton/software.html)
 
 Parâmetros adicionais:
 	Parâmetros Adicionais via código:
@@ -22,6 +22,8 @@ Parâmetros adicionais:
 		Numero maximo de geracoes: numero_geracao_maximo;
 		Tipo de crossover: tipo_crossover:
 			- tipo_crossover=0 : crossover OX;
+			- tipo_crossover=1 : crossover baseado em posicao;
+			- tipo_crossover=2 : crossover baseado em ordem;
 		Controle do crossover se os pais vao ou nao na populacao pos-crossover: incluir_pais_nova_populacao;
 			- incluir_pais_nova_populacao=true : pais vao continuar na populacao pos-crossover;
 			- incluir_pais_nova_populacao=false : pais nao vao continuar na populacao pos-crossover;

@@ -11,7 +11,8 @@ import Jama.Matrix;
  */
 public class Selecao {
 
-	public static Matrix seleciona_candidatos(Matrix populacao,Matrix fitness, int operador_selecao,int quantidade_nova_populacao) {
+	public static Matrix seleciona_candidatos(Matrix populacao,Matrix fitness, int operador_selecao,
+											int quantidade_nova_populacao) {
 		Matrix populacao_nova=new Matrix(0, populacao.getColumnDimension());
 		
 		if(operador_selecao==0) {
@@ -19,8 +20,52 @@ public class Selecao {
 			Matrix populacao_roleta = roleta(populacao, fitness,quantidade_nova_populacao);
 			populacao_nova=JamaUtils.rowAppend(populacao_nova, populacao_roleta);
 			//System.out.println("selecionados!");
+		}else if(operador_selecao==1) {
+			Matrix populacao_torneio= torneio(populacao, fitness, quantidade_nova_populacao);
+			populacao_nova=JamaUtils.rowAppend(populacao_nova, populacao_torneio);
 		}
 		return populacao_nova;
+	}
+	
+	/*
+	 * Retorna uma selecao da populacao passada como parametro de acordo com os criterios do torneio:
+	 * - Escolher dois cromossomos aleatoriamente
+	 * - Gerar um numero aleatorio r entre 0 e 1
+	 * - Se r for menor que k o melhor dos individuos eh escolhido
+	 * 		- k eh passado como parametro < TODO
+	 */
+	private static Matrix torneio(Matrix populacao, Matrix fitness,int quantidade_nova_populacao) {
+		Matrix nova_populacao=new Matrix(0, populacao.getColumnDimension());
+		double k=0.6;
+		
+		Random random=new Random();
+		for (int numero_cromossomos_selecionados = 0; numero_cromossomos_selecionados < quantidade_nova_populacao; numero_cromossomos_selecionados++) {
+			int indice_cromossomo_X=random.nextInt(populacao.getRowDimension());
+			int indice_cromossomo_Y=random.nextInt(populacao.getRowDimension());
+			
+			Matrix cromossomo_X= JamaUtils.getrow(populacao, indice_cromossomo_X);
+			double fitness_X = fitness.get(indice_cromossomo_X, 0);
+			Matrix cromossomo_Y= JamaUtils.getrow(populacao, indice_cromossomo_Y);
+			double fitness_Y = fitness.get(indice_cromossomo_Y, 0);
+			
+			double r=random.nextDouble();
+			
+			if(r < k) {
+				if( fitness_X>fitness_Y ) {
+					nova_populacao=JamaUtils.rowAppend(nova_populacao, cromossomo_X);
+				}else {
+					nova_populacao=JamaUtils.rowAppend(nova_populacao, cromossomo_Y);
+				}
+			}else {
+				if( fitness_X>fitness_Y ) {
+					nova_populacao=JamaUtils.rowAppend(nova_populacao, cromossomo_Y);
+				}else {
+					nova_populacao=JamaUtils.rowAppend(nova_populacao, cromossomo_X);
+				}
+			}
+		}
+		
+		return nova_populacao;
 	}
 
 	/*Normaliza os valores do fitness de cada um dos cromossomos

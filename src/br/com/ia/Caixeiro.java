@@ -6,7 +6,7 @@ import br.com.ia.ga.threads.AlgoritmoGeneticoThreads;
 public class Caixeiro {
 	public static void main(String[] args) {
 		/*
-		 *PARAMETROS:
+		 *PARAMETROS via Linha de comando:
 		 *	- Taxa de crossover
 		 *	- Taxa de mutacao
 		 *	- Operador de selecao
@@ -18,14 +18,14 @@ public class Caixeiro {
 		
 		long tempo_inicial = System.currentTimeMillis();
 		
-		int numero_threads=3;
+		int numero_threads=4;
 		
 		int tamanho_populacao_inicial=200;
 		double diversidade_minima=0;
-		int numero_geracao_maximo=10000;
+		int numero_geracao_maximo=200000;
 		//Parametros de selecao
 		int numero_candidatos_crossover=200; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
-		int quantidade_subpopulacao=10; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
+		int quantidade_subpopulacao=100; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
 		//Parametros de crossover
 		/*
 		 * Tipos de Crossover
@@ -33,7 +33,7 @@ public class Caixeiro {
 		 * 	1: baseado em posicao
 		 * 	2: baseado em ordem
 		 */
-		int tipo_crossover=2;
+		int tipo_crossover=0;
 		boolean pais_sobrevivem=true;
 		//Parametros da Mutacao
 		/*
@@ -50,19 +50,26 @@ public class Caixeiro {
 		int tamanho_populacao_aleatoria=0;
 		int geracao_populacao_aleatoria=Integer.MAX_VALUE;
 		
-		System.out.println("Parametros iniciais:");
-		System.out.println("\tTaxa de crossover="+taxa_crossover);
-		System.out.println("\tTaxa de mutacao="+taxa_mutacao);
-		System.out.println("\tOperador de selecao="+operador_selecao);
-		System.out.println("\tTamanho da Populacao inicial="+tamanho_populacao_inicial);
-		System.out.println("\tDiversidade minima="+diversidade_minima);
-		System.out.println("\tNumero maximo de geracoes="+numero_geracao_maximo);
-		System.out.println();
+		String selecao="";
+		if(operador_selecao==0) selecao="Roleta";
+		else if(operador_selecao==1) selecao="Torneio";
+		
+		String crossover="";
+		if(tipo_crossover==0) crossover="OX";
+		else if(tipo_crossover==1) crossover="baseado em posicao";
+		else if(tipo_crossover==2) crossover="baseado em ordem";
+		
+		String mutacao="";
+		if(tipo_mutacao==0) mutacao="simples";
+		else if(tipo_mutacao==1) mutacao="alternativa";
+		else if(tipo_mutacao==2) mutacao="inversivel";
 		
 		System.out.println("Parametros iniciais:");
 		System.out.println("\tTaxa de crossover="+taxa_crossover);
 		System.out.println("\tTaxa de mutacao="+taxa_mutacao);
-		System.out.println("\tOperador de selecao="+operador_selecao);
+		System.out.println("\tOperador de selecao="+selecao);
+		System.out.println("\tOperador de crossover="+crossover);
+		System.out.println("\tOperador de mutacao="+mutacao);
 		System.out.println("\tTamanho da Populacao inicial="+tamanho_populacao_inicial);
 		System.out.println("\tDiversidade minima="+diversidade_minima);
 		System.out.println("\tNumero maximo de geracoes="+numero_geracao_maximo);
@@ -89,6 +96,17 @@ public class Caixeiro {
 																	numero_threads
 																);
 		}
+		
+		System.out.println("Parametros iniciais:");
+		System.out.println("\tTaxa de crossover="+taxa_crossover);
+		System.out.println("\tTaxa de mutacao="+taxa_mutacao);
+		System.out.println("\tOperador de selecao="+selecao);
+		System.out.println("\tOperador de crossover="+crossover);
+		System.out.println("\tOperador de mutacao="+mutacao);
+		System.out.println("\tTamanho da Populacao inicial="+tamanho_populacao_inicial);
+		System.out.println("\tDiversidade minima="+diversidade_minima);
+		System.out.println("\tNumero maximo de geracoes="+numero_geracao_maximo);
+		System.out.println();
 		
 		System.out.print("\nMelhor Caminho (Solucao) encontrado:");
 		caminho.print(0, 0);
