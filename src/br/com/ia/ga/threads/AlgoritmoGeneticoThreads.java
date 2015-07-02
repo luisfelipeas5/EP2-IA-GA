@@ -2,6 +2,7 @@ package br.com.ia.ga.threads;
 
 import edu.umbc.cs.maple.utils.JamaUtils;
 import Jama.Matrix;
+import br.com.ia.Grafico_Dinamico;
 import br.com.ia.Leitor_Arquivo_Entrada;
 import br.com.ia.ga.AlgoritmoGenetico;
 import br.com.ia.ga.Fitness;
@@ -30,6 +31,9 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		
 		//calcula-se a diversidade da populacao inicial
 		double diversidade=avalia(fitness_inicial)[2];
+		
+		//Grafico para mostrar a evolucao do melhor fitness e do fitness medio
+		Grafico_Dinamico grafico_Dinamico = new Grafico_Dinamico("Melhor e média fitness", numero_geracao_maximo);
 		
 		for(int geracao_atual=0; geracao_atual<numero_geracao_maximo && diversidade>diversidade_minima;	geracao_atual++) {
 			System.out.println("Geracao "+(geracao_atual+1));
@@ -151,6 +155,8 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 							" media="+medidas_avaliacao[1]+
 							" diversidade="+medidas_avaliacao[2]+"\n");
 			
+			grafico_Dinamico.adicionar_ponto(geracao_atual, 100000*medidas_avaliacao[0],
+					geracao_atual, 100000*medidas_avaliacao[1]);
 		}
 		
 		Matrix fitness_final = Fitness.calcula_fitness(populacao, distancias);

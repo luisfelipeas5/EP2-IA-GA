@@ -10,9 +10,10 @@ Alunos:
   Marcelo Kazuya Kajiwara 8516903
 
 Pacotes necessários:
-  Jama (http://math.nist.gov/javanumerics/jama/#Package)
-  JamaUtils (http://www.seas.upenn.edu/~eeaton/software.html)
-
+	Jama (http://math.nist.gov/javanumerics/jama/#Package)
+	JamaUtils (http://www.seas.upenn.edu/~eeaton/software.html)
+	JChart2D (http://www.java2s.com/Code/Java/Chart/JChart2DDynamicChart.htm)
+	
 Parâmetros adicionais:
 	Parâmetros Adicionais via código:
 		Numero de individuos da populacao inicial: tamanho_populacao_inicial;

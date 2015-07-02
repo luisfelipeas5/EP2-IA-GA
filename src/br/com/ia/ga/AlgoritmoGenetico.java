@@ -1,6 +1,7 @@
 package br.com.ia.ga;
 import java.util.Random;
 
+import br.com.ia.Grafico_Dinamico;
 import br.com.ia.Leitor_Arquivo_Entrada;
 import edu.umbc.cs.maple.utils.JamaUtils;
 import Jama.Matrix;
@@ -26,6 +27,8 @@ public class AlgoritmoGenetico {
 		
 		//calcula-se a diversidade da populacao inicial
 		double diversidade=avalia(fitness_inicial)[2];
+		
+		Grafico_Dinamico grafico_Dinamico = new Grafico_Dinamico("Melhor e média fitness", numero_geracao_maximo);
 		
 		for(int geracao_atual=0; geracao_atual<numero_geracao_maximo && diversidade>diversidade_minima;	geracao_atual++) {
 			System.out.println("Geracao "+(geracao_atual+1));
@@ -76,6 +79,8 @@ public class AlgoritmoGenetico {
 			System.out.print("\tmelhor fitness="+medidas_avaliacao[0]+
 							" media="+medidas_avaliacao[1]+
 							" diversidade="+medidas_avaliacao[2]+"\n");
+			
+			grafico_Dinamico.adicionar_ponto(geracao_atual, medidas_avaliacao[0], geracao_atual, medidas_avaliacao[1]);
 		}
 		Matrix fitness_final = Fitness.calcula_fitness(populacao, distancias);
 		melhor_cromossomo=Selecao.seleciona_melhores_individuos(populacao, fitness_final, 1);
