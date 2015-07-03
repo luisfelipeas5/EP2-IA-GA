@@ -3,7 +3,7 @@ package br.com.ia.ga.threads;
 import edu.umbc.cs.maple.utils.JamaUtils;
 import Jama.Matrix;
 import br.com.ia.Grafico_Dinamico;
-import br.com.ia.Leitor_Arquivo_Entrada;
+import br.com.ia.Manipulador_Arquivo_Entrada;
 import br.com.ia.ga.AlgoritmoGenetico;
 import br.com.ia.ga.Fitness;
 import br.com.ia.ga.Selecao;
@@ -155,8 +155,8 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 							" media="+medidas_avaliacao[1]+
 							" diversidade="+medidas_avaliacao[2]+"\n");
 			
-			grafico_Dinamico.adicionar_ponto(geracao_atual, 100000*medidas_avaliacao[0],
-					geracao_atual, 100000*medidas_avaliacao[1]);
+			grafico_Dinamico.adicionar_ponto(geracao_atual, medidas_avaliacao[0],
+					geracao_atual, medidas_avaliacao[1]);
 		}
 		
 		Matrix fitness_final = Fitness.calcula_fitness(populacao, distancias);
@@ -219,7 +219,7 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		System.out.println();
 		
 		//matriz de cada uma das cidades que irao compor o cromossomo
-		Matrix cidades=Leitor_Arquivo_Entrada.lee_arquivo(nome_arquivo);
+		Matrix cidades=Manipulador_Arquivo_Entrada.lee_arquivo(nome_arquivo);
 		
 		Matrix melhor_cromossomo=get_melhor_caminho(cidades,
 													tamanho_populacao_inicial, numero_geracao_maximo, diversidade_minima,

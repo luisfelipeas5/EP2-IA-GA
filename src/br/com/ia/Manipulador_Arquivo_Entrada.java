@@ -1,14 +1,29 @@
 package br.com.ia;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+
 import Jama.Matrix;
 
-public class Leitor_Arquivo_Entrada {
-
+public class Manipulador_Arquivo_Entrada {
+	public static void escreve_arquivo(String nome_arquivo, String linhas){
+		BufferedWriter escritor;
+		try {
+			escritor=new BufferedWriter(new FileWriter(nome_arquivo));
+			escritor.write(linhas);
+			escritor.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	public static Matrix lee_arquivo(String nome_arquivo) {
 		Scanner scanner=null;
 		try {

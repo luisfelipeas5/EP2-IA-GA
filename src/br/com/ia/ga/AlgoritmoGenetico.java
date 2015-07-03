@@ -2,7 +2,7 @@ package br.com.ia.ga;
 import java.util.Random;
 
 import br.com.ia.Grafico_Dinamico;
-import br.com.ia.Leitor_Arquivo_Entrada;
+import br.com.ia.Manipulador_Arquivo_Entrada;
 import edu.umbc.cs.maple.utils.JamaUtils;
 import Jama.Matrix;
 
@@ -234,7 +234,7 @@ public class AlgoritmoGenetico {
 		System.out.println();
 		
 		//matriz de cada uma das cidades que irao compor o cromossomo
-		Matrix cidades=Leitor_Arquivo_Entrada.lee_arquivo(nome_arquivo);
+		Matrix cidades=Manipulador_Arquivo_Entrada.lee_arquivo(nome_arquivo);
 		
 		get_melhor_caminho(cidades,
 				tamanho_populacao_inicial, numero_geracao_maximo, diversidade_minima,

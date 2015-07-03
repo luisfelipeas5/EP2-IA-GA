@@ -31,7 +31,7 @@ public class Grafico_Dinamico {
 	    JFrame frame = new JFrame(titulo);
 	    // add the chart to the frame: 
 	    frame.getContentPane().add(chart);
-	    frame.setSize(400,300);
+	    frame.setSize(800,600);
 	    // Enable the termination button [cross on the upper right edge]: 
 	    frame.addWindowListener(
 	        new WindowAdapter(){

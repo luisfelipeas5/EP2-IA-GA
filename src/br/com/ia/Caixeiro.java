@@ -1,6 +1,7 @@
 package br.com.ia;
 import Jama.Matrix;
 import br.com.ia.ga.AlgoritmoGenetico;
+import br.com.ia.ga.Fitness;
 import br.com.ia.ga.threads.AlgoritmoGeneticoThreads;
 
 public class Caixeiro {
@@ -20,12 +21,12 @@ public class Caixeiro {
 		
 		int numero_threads=4;
 		
-		int tamanho_populacao_inicial=100;
+		int tamanho_populacao_inicial=200;
 		double diversidade_minima=0;
-		int numero_geracao_maximo=500000;
+		int numero_geracao_maximo=10000;
 		//Parametros de selecao
-		int numero_candidatos_crossover=100; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
-		int quantidade_subpopulacao=10; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
+		int numero_candidatos_crossover=200; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
+		int quantidade_subpopulacao=30; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
 		//Parametros de crossover
 		/*
 		 * Tipos de Crossover
@@ -43,9 +44,8 @@ public class Caixeiro {
 		 *  2: variacao da mutacao inversivivel
 		 *  3: mutacao inversivivel #nao implementada
 		 */
-		int tipo_mutacao=1;
+		int tipo_mutacao=2;
 		int quantidade_cromossomo_nao_mutantes=1;
-		
 		//parametros para populacao aleatoria
 		int tamanho_populacao_aleatoria=0;
 		int geracao_populacao_aleatoria=Integer.MAX_VALUE;
@@ -56,13 +56,13 @@ public class Caixeiro {
 		
 		String crossover="";
 		if(tipo_crossover==0) crossover="OX";
-		else if(tipo_crossover==1) crossover="baseado em posicao";
-		else if(tipo_crossover==2) crossover="baseado em ordem";
+		else if(tipo_crossover==1) crossover="Baseado em posicao";
+		else if(tipo_crossover==2) crossover="Baseado em ordem";
 		
 		String mutacao="";
-		if(tipo_mutacao==0) mutacao="simples";
-		else if(tipo_mutacao==1) mutacao="alternativa";
-		else if(tipo_mutacao==2) mutacao="inversivel";
+		if(tipo_mutacao==0) mutacao="Simples";
+		else if(tipo_mutacao==1) mutacao="Alternativa";
+		else if(tipo_mutacao==2) mutacao="Inversivel";
 		
 		System.out.println("Parametros iniciais:");
 		System.out.println("\tTaxa de crossover="+taxa_crossover);
@@ -76,7 +76,7 @@ public class Caixeiro {
 		System.out.println();
 		
 		//matriz de cada uma das cidades que irao compor o cromossomo
-		Matrix cidades=Leitor_Arquivo_Entrada.lee_arquivo(nome_arquivo);
+		Matrix cidades=Manipulador_Arquivo_Entrada.lee_arquivo(nome_arquivo);
 		
 		Matrix caminho=null;
 		if(numero_threads==0) {
@@ -110,6 +110,25 @@ public class Caixeiro {
 		
 		System.out.print("\nMelhor Caminho (Solucao) encontrado:");
 		caminho.print(0, 0);
+		
+		//Nome do arquivo de saida
+		String nome_arquivo_saida="resultados/GA_"+numero_geracao_maximo+"_s"+selecao+"_c"+crossover+"_m"+mutacao;
+		String arquitetura="Parametros iniciais:"+
+							"\n\tTaxa de crossover="+taxa_crossover+
+							"\n\tTaxa de mutacao="+taxa_mutacao+
+							"\n\tOperador de selecao="+selecao+
+							"\n\tOperador de crossover="+crossover+
+							"\n\tOperador de mutacao="+mutacao+
+							"\n\tTamanho da Populacao inicial="+tamanho_populacao_inicial+
+							"\n\tDiversidade minima="+diversidade_minima+
+							"\n\tNumero maximo de geracoes="+numero_geracao_maximo+
+							"\nMelhor Caminho:\n";
+		for (int indice_cidade = 0; indice_cidade < caminho.getColumnDimension(); indice_cidade++) {
+			arquitetura=arquitetura+" "+(int)(caminho.get(0, indice_cidade));
+		}
+		String fitness= Fitness.calcula_fitness(caminho, AlgoritmoGenetico.calcula_distancias(cidades)).get(0, 0)+"";
+		arquitetura=arquitetura+"\n\tFitness="+fitness;
+		Manipulador_Arquivo_Entrada.escreve_arquivo(nome_arquivo_saida, arquitetura);
 		
 		long tempo_final = System.currentTimeMillis();
 		System.out.print("Duracao="+((tempo_final-tempo_inicial)/1000)+"s");
