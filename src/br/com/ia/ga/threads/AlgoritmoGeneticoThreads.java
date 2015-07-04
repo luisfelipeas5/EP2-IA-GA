@@ -32,8 +32,24 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		//calcula-se a diversidade da populacao inicial
 		double diversidade=avalia(fitness_inicial)[2];
 		
+		//Para definir o titulo do grafico
+		String selecao="";
+		if(operador_selecao==0) selecao="Roleta";
+		else if(operador_selecao==1) selecao="Torneio";
+		
+		String crossover="";
+		if(tipo_crossover==0) crossover="OX";
+		else if(tipo_crossover==1) crossover="Baseado em posicao";
+		else if(tipo_crossover==2) crossover="Baseado em ordem";
+		
+		String mutacao="";
+		if(tipo_mutacao==0) mutacao="Simples";
+		else if(tipo_mutacao==1) mutacao="Alternativa";
+		else if(tipo_mutacao==2) mutacao="Inversivel";
+		//Nome do arquivo de saida
+		String titulo_grafico="resultados/GA_"+numero_geracao_maximo+"_s"+selecao+"_c"+crossover+"_m"+mutacao;
 		//Grafico para mostrar a evolucao do melhor fitness e do fitness medio
-		Grafico_Dinamico grafico_Dinamico = new Grafico_Dinamico("Melhor e média fitness", numero_geracao_maximo);
+		Grafico_Dinamico grafico_Dinamico = new Grafico_Dinamico("Melhor e média fitness "+titulo_grafico, numero_geracao_maximo);
 		
 		for(int geracao_atual=0; geracao_atual<numero_geracao_maximo && diversidade>diversidade_minima;	geracao_atual++) {
 			System.out.println("Geracao "+(geracao_atual+1));

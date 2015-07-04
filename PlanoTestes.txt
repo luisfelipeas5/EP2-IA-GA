@@ -1,0 +1,38 @@
+-Melhor Fitness:	
+
+	- Tamnho populacao 215: 100 candidatos 10 subpopulacao 100 filhos 5 nao mutantes:
+		- 1000 geracoes:
+	Desempenho
+		Diferenca entre os crossover:
+			(com mutacao=1, selecao=0 e Tamnho populacao 215: 100 candidatos 10 subpopulacao 100 filhos 5 nao mutantes.
+				Em 10000 geracoes)
+				crossover=0
+				crossover=1
+				crossover=2
+		Diferenca entre as mutações:
+			(com crossover=0, selecao=0 e Tamnho populacao 215: 100 candidatos 10 subpopulacao 100 filhos 5 nao mutantes.
+				Em 10000 geracoes)
+				mutacao=0
+				mutacao=1
+				mutacao=2
+		Diferenca entre os crossover:
+			(com mutacao=1, selecao=0 e Tamnho populacao 215: 100 candidatos 10 subpopulacao 100 filhos 5 nao mutantes.
+				Em 100000 geracoes)
+				crossover=0
+				crossover=1
+				crossover=2
+		Diferenca entre as mutações:
+			(com crossover=0, selecao=0 e Tamnho populacao 215: 100 candidatos 10 subpopulacao 100 filhos 5 nao mutantes.
+				Em 100000 geracoes)
+				mutacao=0
+				mutacao=1
+				mutacao=2
+		
+			-Crossover
+			-Mudando mutacao
+			-Mudando Tamanho populacao
+			-Mudando Tamanho Subpopulacao
+			-Mudando Numero de Individuos Mutantes
+			-Mudando Numero de Geracoes
+			-Pais sobrevivendo ou nao
+			-Mudando numero de candidatos a crossover

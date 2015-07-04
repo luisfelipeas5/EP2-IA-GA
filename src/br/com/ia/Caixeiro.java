@@ -21,12 +21,12 @@ public class Caixeiro {
 		
 		int numero_threads=4;
 		
-		int tamanho_populacao_inicial=200;
+		int tamanho_populacao_inicial=100;
 		double diversidade_minima=0;
-		int numero_geracao_maximo=10000;
+		int numero_geracao_maximo=100000;
 		//Parametros de selecao
-		int numero_candidatos_crossover=200; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
-		int quantidade_subpopulacao=30; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
+		int numero_candidatos_crossover=tamanho_populacao_inicial; //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
+		int quantidade_subpopulacao=10; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
 		//Parametros de crossover
 		/*
 		 * Tipos de Crossover
@@ -34,7 +34,7 @@ public class Caixeiro {
 		 * 	1: baseado em posicao
 		 * 	2: baseado em ordem
 		 */
-		int tipo_crossover=0;
+		int tipo_crossover=1;
 		boolean pais_sobrevivem=true;
 		//Parametros da Mutacao
 		/*
@@ -44,8 +44,8 @@ public class Caixeiro {
 		 *  2: variacao da mutacao inversivivel
 		 *  3: mutacao inversivivel #nao implementada
 		 */
-		int tipo_mutacao=2;
-		int quantidade_cromossomo_nao_mutantes=1;
+		int tipo_mutacao=1;
+		int quantidade_cromossomo_nao_mutantes=5;
 		//parametros para populacao aleatoria
 		int tamanho_populacao_aleatoria=0;
 		int geracao_populacao_aleatoria=Integer.MAX_VALUE;
@@ -111,8 +111,19 @@ public class Caixeiro {
 		System.out.print("\nMelhor Caminho (Solucao) encontrado:");
 		caminho.print(0, 0);
 		
+		long tempo_final = System.currentTimeMillis();
+		System.out.print("Duracao="+((tempo_final-tempo_inicial)/1000)+"s");
+		System.out.print("="+((tempo_final-tempo_inicial)/60000)+"min");
+		System.out.print("="+((tempo_final-tempo_inicial)/3600000)+"h");
+		
 		//Nome do arquivo de saida
-		String nome_arquivo_saida="resultados/GA_"+numero_geracao_maximo+"_s"+selecao+"_c"+crossover+"_m"+mutacao;
+		String nome_arquivo_saida="resultados/GA_"+numero_geracao_maximo+"_s"+selecao+"_c"+crossover+"_m"+mutacao+".txt";
+		
+		int tamanho_populacao_corrente=numero_candidatos_crossover+quantidade_cromossomo_nao_mutantes+quantidade_subpopulacao;
+		if(pais_sobrevivem) {
+			tamanho_populacao_corrente+=numero_candidatos_crossover;
+		}
+		
 		String arquitetura="Parametros iniciais:"+
 							"\n\tTaxa de crossover="+taxa_crossover+
 							"\n\tTaxa de mutacao="+taxa_mutacao+
@@ -120,8 +131,12 @@ public class Caixeiro {
 							"\n\tOperador de crossover="+crossover+
 							"\n\tOperador de mutacao="+mutacao+
 							"\n\tTamanho da Populacao inicial="+tamanho_populacao_inicial+
+							"\n\tTamanho populacao corrente="+(tamanho_populacao_corrente)+
 							"\n\tDiversidade minima="+diversidade_minima+
 							"\n\tNumero maximo de geracoes="+numero_geracao_maximo+
+							"\n\tDuracao="+((tempo_final-tempo_inicial)/1000)+"s"+
+							"="+((tempo_final-tempo_inicial)/60000)+"min"+
+							"="+((tempo_final-tempo_inicial)/3600000)+"h"+
 							"\nMelhor Caminho:\n";
 		for (int indice_cidade = 0; indice_cidade < caminho.getColumnDimension(); indice_cidade++) {
 			arquitetura=arquitetura+" "+(int)(caminho.get(0, indice_cidade));
@@ -129,11 +144,5 @@ public class Caixeiro {
 		String fitness= Fitness.calcula_fitness(caminho, AlgoritmoGenetico.calcula_distancias(cidades)).get(0, 0)+"";
 		arquitetura=arquitetura+"\n\tFitness="+fitness;
 		Manipulador_Arquivo_Entrada.escreve_arquivo(nome_arquivo_saida, arquitetura);
-		
-		long tempo_final = System.currentTimeMillis();
-		System.out.print("Duracao="+((tempo_final-tempo_inicial)/1000)+"s");
-		System.out.print("="+((tempo_final-tempo_inicial)/60000)+"min");
-		System.out.print("="+((tempo_final-tempo_inicial)/3600000)+"h");
-		
 	}
 }
