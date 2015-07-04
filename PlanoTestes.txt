@@ -6,28 +6,21 @@
 		Diferenca entre os crossover:
 			(com mutacao=1, selecao=0 e Tamnho populacao 215: 100 candidatos 10 subpopulacao 100 filhos 5 nao mutantes.
 				Em 10000 geracoes)
-				crossover=0
-				crossover=1
-				crossover=2
 		Diferenca entre as mutações:
 			(com crossover=0, selecao=0 e Tamnho populacao 215: 100 candidatos 10 subpopulacao 100 filhos 5 nao mutantes.
 				Em 10000 geracoes)
-				mutacao=0
-				mutacao=1
-				mutacao=2
 		Diferenca entre os crossover:
 			(com mutacao=1, selecao=0 e Tamnho populacao 215: 100 candidatos 10 subpopulacao 100 filhos 5 nao mutantes.
 				Em 100000 geracoes)
-				crossover=0
-				crossover=1
-				crossover=2
 		Diferenca entre as mutações:
 			(com crossover=0, selecao=0 e Tamnho populacao 215: 100 candidatos 10 subpopulacao 100 filhos 5 nao mutantes.
 				Em 100000 geracoes)
-				mutacao=0
-				mutacao=1
-				mutacao=2
-		
+		Diferenca entre selecao no melhor desempenho:
+			(com crossover=0, com mutacao=1 e Tamnho populacao 215: 100 candidatos 10 subpopulacao 100 filhos 5 nao mutantes.
+				Em 10000 geracoes)
+			selecao=0
+			selecao=1			
+				
 			-Crossover
 			-Mudando mutacao
 			-Mudando Tamanho populacao

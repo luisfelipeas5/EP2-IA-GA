@@ -34,7 +34,7 @@ public class Caixeiro {
 		 * 	1: baseado em posicao
 		 * 	2: baseado em ordem
 		 */
-		int tipo_crossover=1;
+		int tipo_crossover=0;
 		boolean pais_sobrevivem=true;
 		//Parametros da Mutacao
 		/*
