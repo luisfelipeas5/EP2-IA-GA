@@ -3,9 +3,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry excluding="src/" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/luisfelipeas/Downloads/Jama-1.0.3.jar"/>
-	<classpathentry kind="lib" path="/home/luisfelipeas/Downloads/Utils/Utils.jar"/>
-	<classpathentry kind="lib" path="/home/luisfelipeas/Downloads/jfreechart-1.0.19/jfreechart-1.0.19-demo.jar"/>
-	<classpathentry kind="lib" path="/home/luisfelipeas/git/EP2-IA-GA/jchart2d.jar"/>
+	<classpathentry kind="lib" path="/home/luisfelipeas/git/EP2-IA-GA/libs/jchart2d.jar"/>
+	<classpathentry kind="lib" path="/home/luisfelipeas/git/EP2-IA-GA/libs/Jama-1.0.3.jar"/>
+	<classpathentry kind="lib" path="/home/luisfelipeas/git/EP2-IA-GA/libs/jfreechart-1.0.19-demo.jar"/>
+	<classpathentry kind="lib" path="/home/luisfelipeas/git/EP2-IA-GA/libs/Utils.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
