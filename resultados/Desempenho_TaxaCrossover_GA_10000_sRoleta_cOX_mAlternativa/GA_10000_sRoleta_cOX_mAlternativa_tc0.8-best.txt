@@ -1,0 +1,14 @@
+Parametros iniciais:
+	Taxa de crossover=0.8
+	Taxa de mutacao=0.2
+	Operador de selecao=Roleta
+	Operador de crossover=OX
+	Operador de mutacao=Alternativa
+	Tamanho da Populacao inicial=100
+	Tamanho populacao corrente=150
+	Diversidade minima=0.0
+	Numero maximo de geracoes=10000
+	Duracao=75s=1min=0h
+Melhor Caminho:
+ 28 22 18 17 16 13 7 6 5 95 97 96 94 90 88 86 25 56 50 35 73 72 15 4 29 87 23 31 19 61 85 89 93 92 99 2 8 14 10 9 3 100 98 91 1 11 12 20 21 24 26 32 33 39 38 42 36 34 51 53 58 52 60 66 68 63 62 65 67 70 81 84 83 77 76 75 71 79 78 82 80 74 69 64 57 44 41 45 47 48 59 55 54 49 46 37 43 40 30 27
+	Fitness=4.443151783436209E-5

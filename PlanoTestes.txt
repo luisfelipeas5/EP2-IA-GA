@@ -20,15 +20,16 @@
 				Em 10000 geracoes)
 		Mudando o tamanho da populacao:
 			(com crossover=0, com mutacao=1, selecao=0 e Em 10000 geracoes)
-			-Tamanho populacao 315: 150 candidatos 10 subpopulacao 150 filhos 5 nao mutantes.
-			-Tamanho populacao 415: 200 candidatos 10 subpopulacao 200 filhos 5 nao mutantes.
+			(com crossover=0, com mutacao=1, selecao=0 e Em 100000 geracoes)
+		Mudando Tamanho da Subpopulacao	(candidatos
+			(com crossover=0, com mutacao=1, selecao=0 e Em 10000 geracoes)
+				-melhor resultado com 100000 geracoes!
+		Mudando Tamanho dos Nao Mutantes
+			(com crossover=0, com mutacao=1, selecao=0 e Em 10000 geracoes)
+				-melhor resultado com 100000 geracoes!
+		Pais Sobrevivem ou não
+			(com crossover=0, com mutacao=1, selecao=0, subpopulacao 25, nao mutantes 20, populacao Inicial 100, candidatos 100, em 10000 geracoes)
+		Mudando Numero de Candidatos
+		Alterando Taxa De Crossover
+			(com os melhores parametros ate agora, taxa de mutacao=0,2)						
 			
-
-			-Crossover
-			-Mudando mutacao
-			-Mudando Tamanho populacao
-			-Mudando Tamanho Subpopulacao
-			-Mudando Numero de Individuos Mutantes
-			-Mudando Numero de Geracoes
-			-Pais sobrevivendo ou nao
-			-Mudando numero de candidatos a crossover
