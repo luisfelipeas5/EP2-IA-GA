@@ -14,7 +14,8 @@ public class AlgoritmoGenetico {
 											double taxa_crossover, int tipo_crossover, boolean pais_sobrevivem, 
 											double taxa_mutacao, int tipo_mutacao, int quantidade_cromossomo_nao_mutantes
 											) {
-		Matrix melhor_cromossomo=null;
+		//Matriz que armazena o melhor cromossomo adquirido em cada uma das épocas
+		Matrix melhores_cromossomos=new Matrix(0, cidades.getRowDimension());
 		
 		//matriz que armazena as distancias entre cada uma das cidades
 		Matrix distancias=AlgoritmoGenetico.calcula_distancias(cidades);
@@ -97,11 +98,13 @@ public class AlgoritmoGenetico {
 							" diversidade="+medidas_avaliacao[2]+"\n");
 			
 			grafico_Dinamico.adicionar_ponto(geracao_atual, medidas_avaliacao[0], geracao_atual, medidas_avaliacao[1]);
+			
+			Matrix fitness_final = Fitness.calcula_fitness(populacao, distancias);
+			Matrix melhor_cromossomo=Selecao.seleciona_melhores_individuos(populacao, fitness_final, 1);
+			melhores_cromossomos=JamaUtils.rowAppend(melhores_cromossomos, melhor_cromossomo);
 		}
-		Matrix fitness_final = Fitness.calcula_fitness(populacao, distancias);
-		melhor_cromossomo=Selecao.seleciona_melhores_individuos(populacao, fitness_final, 1);
 		
-		return melhor_cromossomo;
+		return melhores_cromossomos;
 	}
 	
 	

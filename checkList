@@ -1,33 +1,6 @@
 CHECKLIST:
 	RELATORIO:
 		-Observar:
-			-Melhor Fitness:	
-				-Mudando crossover
-				-Mudando mutacao
-				-Mudando Tamanho populacao
-				-Mudando Tamanho Subpopulacao
-				-Mudando Numero de Individuos Mutantes
-				-Mudando Numero de Geracoes
-				-Pais sobrevivendo ou nao
-				-Mudando numero de candidatos a crossover
-			-Media Fitness:	
-				-Mudando crossover
-				-Mudando mutacao
-				-Mudando Tamanho populacao
-				-Mudando Tamanho Subpopulacao
-				-Mudando Numero de Individuos Mutantes
-				-Mudando Numero de Geracoes
-				-Pais sobrevivendo ou nao
-				-Mudando numero de candidatos a crossover
-			-Diversidade:	
-				-Mudando crossover
-				-Mudando mutacao
-				-Mudando Tamanho populacao
-				-Mudando Tamanho Subpopulacao
-				-Mudando Numero de Individuos Mutantes
-				-Mudando Numero de Geracoes
-				-Pais sobrevivendo ou nao
-				-Mudando numero de candidatos a crossover
 			-Tempo:
 				-Sem Threads
 				-Mudando Numero de Threads
@@ -46,8 +19,8 @@ CHECKLIST:
 			OK - Operador de seleção
 		MOSTRAR NA TELA:
 			OK - Progressão da evolução
-			- Gravar em arquivo texto os melhores indivíduos
-			- Graficos
+			OK - Gravar em arquivo texto os melhores indivíduos
+			OK - Graficos
 	REQUISITOS DESEJAVEIS:
 		- Implementar outros tipos de Selecao
 		- Implementar outros tipos de Crossover

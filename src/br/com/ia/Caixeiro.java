@@ -1,4 +1,5 @@
 package br.com.ia;
+import edu.umbc.cs.maple.utils.JamaUtils;
 import Jama.Matrix;
 import br.com.ia.ga.AlgoritmoGenetico;
 import br.com.ia.ga.Fitness;
@@ -23,7 +24,7 @@ public class Caixeiro {
 		
 		int tamanho_populacao_inicial=100;
 		double diversidade_minima=0;
-		int numero_geracao_maximo=100000;
+		int numero_geracao_maximo=10000;
 		//Parametros de selecao
 		int numero_candidatos_crossover=(int)(tamanho_populacao_inicial*1); //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
 		int quantidade_subpopulacao=25; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
@@ -78,16 +79,17 @@ public class Caixeiro {
 		//matriz de cada uma das cidades que irao compor o cromossomo
 		Matrix cidades=Manipulador_Arquivo_Entrada.lee_arquivo(nome_arquivo);
 		
-		Matrix caminho=null;
+		//Armazena n melhores caminhos gerados. Sendo n igual ao numero de epocas maximo
+		Matrix caminhos=null;
 		if(numero_threads==0) {
-			caminho=AlgoritmoGenetico.get_melhor_caminho(cidades,
+			caminhos=AlgoritmoGenetico.get_melhor_caminho(cidades,
 															tamanho_populacao_inicial, numero_geracao_maximo, diversidade_minima,
 															operador_selecao, numero_candidatos_crossover, quantidade_subpopulacao,
 															taxa_crossover, tipo_crossover, pais_sobrevivem, 
 															taxa_mutacao, tipo_mutacao, quantidade_cromossomo_nao_mutantes
 															);
 		}else {
-			caminho=AlgoritmoGeneticoThreads.get_melhor_caminho(cidades,
+			caminhos=AlgoritmoGeneticoThreads.get_melhor_caminho(cidades,
 																	tamanho_populacao_inicial, numero_geracao_maximo, diversidade_minima,
 																	operador_selecao, numero_candidatos_crossover, quantidade_subpopulacao,
 																	taxa_crossover, tipo_crossover, pais_sobrevivem, 
@@ -97,52 +99,73 @@ public class Caixeiro {
 																);
 		}
 		
-		System.out.println("Parametros iniciais:");
-		System.out.println("\tTaxa de crossover="+taxa_crossover);
-		System.out.println("\tTaxa de mutacao="+taxa_mutacao);
-		System.out.println("\tOperador de selecao="+selecao);
-		System.out.println("\tOperador de crossover="+crossover);
-		System.out.println("\tOperador de mutacao="+mutacao);
-		System.out.println("\tTamanho da Populacao inicial="+tamanho_populacao_inicial);
-		System.out.println("\tDiversidade minima="+diversidade_minima);
-		System.out.println("\tNumero maximo de geracoes="+numero_geracao_maximo);
-		System.out.println();
-		
-		System.out.print("\nMelhor Caminho (Solucao) encontrado:");
-		caminho.print(0, 0);
+		Matrix caminho=JamaUtils.getrow(caminhos, caminhos.getRowDimension()-1);
 		
 		long tempo_final = System.currentTimeMillis();
 		System.out.print("Duracao="+((tempo_final-tempo_inicial)/1000)+"s");
 		System.out.print("="+((tempo_final-tempo_inicial)/60000)+"min");
 		System.out.print("="+((tempo_final-tempo_inicial)/3600000)+"h");
 		
-		//Nome do arquivo de saida
-		String nome_arquivo_saida="resultados/GA_"+numero_geracao_maximo+"_s"+selecao+"_c"+crossover+"_m"+mutacao+".txt";
-		
 		int tamanho_populacao_corrente=numero_candidatos_crossover+quantidade_cromossomo_nao_mutantes+quantidade_subpopulacao;
 		if(pais_sobrevivem) {
 			tamanho_populacao_corrente+=numero_candidatos_crossover;
 		}
 		
+		//Nome do arquivo de saida
+		String nome_arquivo_saida="resultados/GA_"+numero_geracao_maximo+
+								"_s"+selecao+"_c"+crossover+"_m"+mutacao+
+								"_popIni"+tamanho_populacao_inicial+
+								"_subpop"+quantidade_subpopulacao+
+								"_candidatos"+numero_candidatos_crossover+
+								"_naoMut"+quantidade_cromossomo_nao_mutantes+
+								"_popCorr"+tamanho_populacao_corrente+
+								".txt";
+		
 		String arquitetura="Parametros iniciais:"+
 							"\n\tTaxa de crossover="+taxa_crossover+
 							"\n\tTaxa de mutacao="+taxa_mutacao+
-							"\n\tOperador de selecao="+selecao+
-							"\n\tOperador de crossover="+crossover+
-							"\n\tOperador de mutacao="+mutacao+
 							"\n\tTamanho da Populacao inicial="+tamanho_populacao_inicial+
+							"\n\tTamanho da Subpopulacao (nao sofrem selecao)="+quantidade_subpopulacao+
+							"\n\tOperador de selecao="+selecao+
+							"\n\tCandidatos a crossover="+numero_candidatos_crossover+
+							"\n\tOperador de crossover="+crossover+
+							"\n\tQuantidade de cromossomos nao mutantes (segunda subpopulacao)="+quantidade_cromossomo_nao_mutantes+
+							"\n\tOperador de mutacao="+mutacao+
 							"\n\tTamanho populacao corrente="+(tamanho_populacao_corrente)+
 							"\n\tDiversidade minima="+diversidade_minima+
 							"\n\tNumero maximo de geracoes="+numero_geracao_maximo+
+							"\n\tNumero de threads="+numero_threads+
 							"\n\tDuracao="+((tempo_final-tempo_inicial)/1000)+"s"+
 							"="+((tempo_final-tempo_inicial)/60000)+"min"+
-							"="+((tempo_final-tempo_inicial)/3600000)+"h"+
-							"\nMelhor Caminho:\n";
+							"="+((tempo_final-tempo_inicial)/3600000)+"h";
+		
+		arquitetura+="\nMelhor Caminho:\n";
 		for (int indice_cidade = 0; indice_cidade < caminho.getColumnDimension(); indice_cidade++) {
 			arquitetura=arquitetura+" "+(int)(caminho.get(0, indice_cidade));
 		}
 		String fitness= Fitness.calcula_fitness(caminho, AlgoritmoGenetico.calcula_distancias(cidades)).get(0, 0)+"";
 		arquitetura=arquitetura+"\n\tFitness="+fitness;
+		
+		System.out.println(arquitetura);
+		
+		System.out.print("Gerando arquivo de saida...");
+		arquitetura+="\n\nMelhores caminhos adquiridos (ordem crescente de fitness):\n";
+		Matrix caminho_anterior=new Matrix(1,cidades.getRowDimension());
+		for (int indice_caminho = 0; indice_caminho < caminhos.getRowDimension(); indice_caminho++) {
+			Matrix melhor_caminho_i=JamaUtils.getrow(caminhos, indice_caminho);
+			Matrix diferenca = melhor_caminho_i.minus(caminho_anterior);
+			for (int i = 0; i < diferenca.getColumnDimension(); i++) {
+				if(diferenca.get(0, i)!=0) {
+					arquitetura+="\ngeracao "+indice_caminho+":";
+					for (int indice_cidade = 0; indice_cidade < melhor_caminho_i.getColumnDimension(); indice_cidade++) {
+						arquitetura=arquitetura+" "+(int)(melhor_caminho_i.get(0, indice_cidade));
+					}
+					break;
+				}
+			}
+			caminho_anterior=melhor_caminho_i;
+		}
 		Manipulador_Arquivo_Entrada.escreve_arquivo(nome_arquivo_saida, arquitetura);
+		System.out.println("gerado!");
 	}
 }

@@ -18,7 +18,8 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 												int quantidade_cromossomo_nao_mutantes,
 												int geracao_populacao_aleatoria, int tamanho_populacao_aleatoria, 
 												int numero_threads) {
-		Matrix melhor_cromossomo=null;
+		//Matriz que armazena o melhor cromossomo adquirido em cada uma das épocas
+		Matrix melhores_cromossomos=new Matrix(0,cidades.getRowDimension());
 		
 		//matriz que armazena as distancias entre cada uma das cidades
 		Matrix distancias=calcula_distancias(cidades);
@@ -46,7 +47,7 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 		if(tipo_mutacao==0) mutacao="Simples";
 		else if(tipo_mutacao==1) mutacao="Alternativa";
 		else if(tipo_mutacao==2) mutacao="Inversivel";
-		//Nome do arquivo de saida
+		//Titulo do grafico
 		String titulo_grafico="resultados/GA_"+numero_geracao_maximo+"_s"+selecao+"_c"+crossover+"_m"+mutacao;
 		//Grafico para mostrar a evolucao do melhor fitness e do fitness medio
 		Grafico_Dinamico grafico_Dinamico = new Grafico_Dinamico("Melhor e média fitness "+titulo_grafico, numero_geracao_maximo);
@@ -173,12 +174,12 @@ public class AlgoritmoGeneticoThreads extends AlgoritmoGenetico{
 			
 			grafico_Dinamico.adicionar_ponto(geracao_atual, medidas_avaliacao[0],
 					geracao_atual, medidas_avaliacao[1]);
+			
+			Matrix fitness_final = Fitness.calcula_fitness(populacao, distancias);
+			Matrix melhor_cromossomo=Selecao.seleciona_melhores_individuos(populacao, fitness_final, 1);
+			melhores_cromossomos=JamaUtils.rowAppend(melhores_cromossomos, melhor_cromossomo);
 		}
-		
-		Matrix fitness_final = Fitness.calcula_fitness(populacao, distancias);
-		melhor_cromossomo=Selecao.seleciona_melhores_individuos(populacao, fitness_final, 1);
-		
-		return melhor_cromossomo;
+		return melhores_cromossomos;
 	}
 	
 	public static void main(String[] args) {

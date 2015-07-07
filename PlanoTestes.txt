@@ -32,4 +32,5 @@
 		Mudando Numero de Candidatos
 		Alterando Taxa De Crossover
 			(com os melhores parametros ate agora, taxa de mutacao=0,2)						
-			
+		Alterando Taxa De Mutacao
+			(com os melhores parametros ate agora, taxa de crossover=0,5)
