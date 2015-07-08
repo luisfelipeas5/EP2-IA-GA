@@ -13,7 +13,15 @@ Pacotes necessários:
 	Jama (http://math.nist.gov/javanumerics/jama/#Package)
 	JamaUtils (http://www.seas.upenn.edu/~eeaton/software.html)
 	JChart2D (http://www.java2s.com/Code/Java/Chart/JChart2DDynamicChart.htm)
-	
+
+Parâmetros via linha de comando:
+	- taxa de crossover
+	- taxa de mutação
+	- operador de seleção
+		- operador=0, Seleção via Roleta
+		- operador=1, Seleção via Torneio
+	- nome do arquivo de entrada com as cidades
+		- cada linha deve conter o: id da cidade, coordenada x e coordenada y, separado por espaços
 Parâmetros adicionais:
 	Parâmetros Adicionais via código:
 		Numero de individuos da populacao inicial: tamanho_populacao_inicial;
