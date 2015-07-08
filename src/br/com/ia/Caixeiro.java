@@ -26,8 +26,8 @@ public class Caixeiro {
 		double diversidade_minima=0;
 		int numero_geracao_maximo=10000;
 		//Parametros de selecao
-		int numero_candidatos_crossover=(int)(tamanho_populacao_inicial*1); //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
-		int quantidade_subpopulacao=25; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
+		int numero_candidatos_crossover=(int)(tamanho_populacao_inicial*0.5); //Define-se quantos individuos no maximo tera a populacao de candidatos a crossover
+		int quantidade_subpopulacao=20; //Quantidade dos melhores individuos que comporao a subpopulacao de candidatos
 		//Parametros de crossover
 		/*
 		 * Tipos de Crossover
