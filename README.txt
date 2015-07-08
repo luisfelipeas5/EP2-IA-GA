@@ -64,3 +64,6 @@ Algoritmo com Multi-Thread x sem Multi-Thread:
 			utilizando duas threads a mais. Cada Uma das threads operara sobre (1/n) da populacao, sendo n=2, entao,
 			cada thread operara sobre 1/2 da populacao para realizar o crossover e a mutacao.
 			Enquanto isso a thread main fica aguardando as threads terminar.	
+
+A melhor Rota obtida:
+	./resultados/Desempenho_Melhor_Params_g100000/GA_100000_sRoleta_cOX_mAlternativa_candidatos100_sup25_naomut25_tc0.5_tm0.2-best.txt
